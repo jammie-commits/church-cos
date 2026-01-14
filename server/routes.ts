@@ -12,6 +12,13 @@ export async function registerRoutes(
   // Setup Auth first
   await setupAuth(app);
 
+  app.get("/api/auth/me", (req, res) => {
+    if (req.isAuthenticated()) {
+      return res.json(req.user);
+    }
+    res.status(401).json({ message: "Not authenticated" });
+  });
+
   // Users
   app.get(api.users.list.path, async (req, res) => {
     // Add auth check here later (e.g. if (req.isAuthenticated()))
