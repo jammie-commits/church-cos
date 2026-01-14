@@ -21,6 +21,8 @@ export interface IStorage {
 
   // Departments
   getDepartments(): Promise<Department[]>;
+  getUserDepartments(userId: string): Promise<number[]>;
+  getUsersByDepartments(departmentIds: number[]): Promise<User[]>;
   createDepartment(dept: InsertDepartment): Promise<Department>;
 
   // Events
@@ -77,6 +79,27 @@ export class DatabaseStorage implements IStorage {
 
   async getDepartments(): Promise<Department[]> {
     return db.select().from(departments);
+  }
+
+  async getUserDepartments(userId: string): Promise<number[]> {
+    const results = await db.select({ departmentId: userDepartments.departmentId })
+      .from(userDepartments)
+      .where(eq(userDepartments.userId, userId));
+    return results.map(r => r.departmentId);
+  }
+
+  async getUsersByDepartments(departmentIds: number[]): Promise<User[]> {
+    if (departmentIds.length === 0) return [];
+    
+    const results = await db.select({ user: users })
+      .from(users)
+      .innerJoin(userDepartments, eq(users.id, userDepartments.userId))
+      .where(sql`${userDepartments.departmentId} IN ${departmentIds}`);
+    
+    // De-duplicate users who might be in multiple departments
+    const uniqueUsers = new Map<string, User>();
+    results.forEach(r => uniqueUsers.set(r.user.id, r.user));
+    return Array.from(uniqueUsers.values());
   }
 
   async createDepartment(dept: InsertDepartment): Promise<Department> {

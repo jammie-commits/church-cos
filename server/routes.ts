@@ -21,8 +21,25 @@ export async function registerRoutes(
 
   // Users
   app.get(api.users.list.path, async (req, res) => {
-    // Add auth check here later (e.g. if (req.isAuthenticated()))
-    const users = await storage.getAllUsers();
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = req.user as any;
+    const userId = user.claims.sub;
+    
+    // Fetch user from DB to check role
+    const dbUser = await storage.getUser(userId);
+    if (!dbUser) return res.status(404).json({ message: "User not found" });
+
+    if (dbUser.role === 'admin') {
+      const users = await storage.getAllUsers();
+      return res.json(users);
+    }
+
+    // Normal user: only see members of their own departments
+    const userDeptIds = await storage.getUserDepartments(userId);
+    const users = await storage.getUsersByDepartments(userDeptIds);
     res.json(users);
   });
 
