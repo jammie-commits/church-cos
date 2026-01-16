@@ -1,6 +1,7 @@
 import { AppShell } from "@/components/app-shell";
 import { TopBar } from "@/components/top-bar";
 
+export const dynamic = "force-dynamic";
 export default function ProjectDetails() {
     return (
         <AppShell role="member">

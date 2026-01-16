@@ -3,6 +3,8 @@ import { AppShell } from "@/components/app-shell";
 import { TopBar } from "@/components/top-bar";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function Projects() {
     const projects = await storage.getProjects();
 

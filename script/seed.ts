@@ -293,8 +293,14 @@ async function seedUsersAndData() {
 }
 
 async function main() {
-  if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL is not set. Ensure you have a .env file with DATABASE_URL.");
+  const databaseUrl =
+    process.env.DATABASE_URL ??
+    process.env.POSTGRES_URL ??
+    process.env.POSTGRES_PRISMA_URL ??
+    process.env.POSTGRES_URL_NON_POOLING;
+
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL is not set. Ensure you have a .env file with DATABASE_URL or POSTGRES_URL.");
   }
 
   console.log("Seeding database...");
