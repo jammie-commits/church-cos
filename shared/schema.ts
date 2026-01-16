@@ -112,7 +112,14 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
 
 // === BASE SCHEMAS ===
 
-export const insertUserSchema = createInsertSchema(users).omit({ id: true, memberId: true, createdAt: true, updatedAt: true });
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  memberId: true,
+  passwordHash: true,
+  passwordSalt: true,
+  createdAt: true,
+  updatedAt: true,
+});
 export const insertDepartmentSchema = createInsertSchema(departments).omit({ id: true });
 export const insertEventSchema = createInsertSchema(events).omit({ id: true });
 export const insertAttendanceSchema = createInsertSchema(attendance).omit({ id: true, checkInTime: true });

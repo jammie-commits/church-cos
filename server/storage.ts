@@ -9,20 +9,23 @@ import {
   type Notification,
   type InsertAttendance
 } from "@shared/schema";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, sql } from "drizzle-orm";
+import { createUniqueMemberId } from "@/server/member-id";
+
+export type PublicUser = Omit<User, "passwordHash" | "passwordSalt">;
 
 export interface IStorage {
   // User
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUser(id: string, user: UpdateUserRequest): Promise<User>;
-  getAllUsers(): Promise<User[]>;
+  getUser(id: string): Promise<PublicUser | undefined>;
+  getUserByUsername(username: string): Promise<PublicUser | undefined>;
+  createUser(user: InsertUser): Promise<PublicUser>;
+  updateUser(id: string, user: UpdateUserRequest): Promise<PublicUser>;
+  getAllUsers(): Promise<PublicUser[]>;
 
   // Departments
   getDepartments(): Promise<Department[]>;
   getUserDepartments(userId: string): Promise<number[]>;
-  getUsersByDepartments(departmentIds: number[]): Promise<User[]>;
+  getUsersByDepartments(departmentIds: number[]): Promise<PublicUser[]>;
   createDepartment(dept: InsertDepartment): Promise<Department>;
 
   // Events
@@ -51,30 +54,39 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
-  async getUser(id: string): Promise<User | undefined> {
+  async getUser(id: string): Promise<PublicUser | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+    if (!user) return undefined;
+    const { passwordHash: _passwordHash, passwordSalt: _passwordSalt, ...publicUser } = user as any;
+    return publicUser as PublicUser;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+  async getUserByUsername(username: string): Promise<PublicUser | undefined> {
     const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user;
+    if (!user) return undefined;
+    const { passwordHash: _passwordHash, passwordSalt: _passwordSalt, ...publicUser } = user as any;
+    return publicUser as PublicUser;
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    // Generate Member ID
-    const memberId = `MEM-${Date.now().toString().slice(-6)}`;
+  async createUser(insertUser: InsertUser): Promise<PublicUser> {
+    const memberId = await createUniqueMemberId("JTW");
     const [user] = await db.insert(users).values({ ...insertUser, memberId }).returning();
-    return user;
+    const { passwordHash: _passwordHash, passwordSalt: _passwordSalt, ...publicUser } = user as any;
+    return publicUser as PublicUser;
   }
 
-  async updateUser(id: string, updates: UpdateUserRequest): Promise<User> {
+  async updateUser(id: string, updates: UpdateUserRequest): Promise<PublicUser> {
     const [updated] = await db.update(users).set(updates).where(eq(users.id, id)).returning();
-    return updated;
+    const { passwordHash: _passwordHash, passwordSalt: _passwordSalt, ...publicUser } = updated as any;
+    return publicUser as PublicUser;
   }
 
-  async getAllUsers(): Promise<User[]> {
-    return db.select().from(users);
+  async getAllUsers(): Promise<PublicUser[]> {
+    const results = await db.select().from(users);
+    return results.map((user) => {
+      const { passwordHash: _passwordHash, passwordSalt: _passwordSalt, ...publicUser } = user as any;
+      return publicUser as PublicUser;
+    });
   }
 
   async getDepartments(): Promise<Department[]> {
@@ -88,18 +100,21 @@ export class DatabaseStorage implements IStorage {
     return results.map(r => r.departmentId);
   }
 
-  async getUsersByDepartments(departmentIds: number[]): Promise<User[]> {
+  async getUsersByDepartments(departmentIds: number[]): Promise<PublicUser[]> {
     if (departmentIds.length === 0) return [];
-    
+
     const results = await db.select({ user: users })
       .from(users)
       .innerJoin(userDepartments, eq(users.id, userDepartments.userId))
       .where(sql`${userDepartments.departmentId} IN ${departmentIds}`);
-    
+
     // De-duplicate users who might be in multiple departments
-    const uniqueUsers = new Map<string, User>();
-    results.forEach(r => uniqueUsers.set(r.user.id, r.user));
-    return Array.from(uniqueUsers.values());
+    const uniqueUsers = new Map<string, PublicUser>();
+    results.forEach((r) => {
+      const { passwordHash: _passwordHash, passwordSalt: _passwordSalt, ...publicUser } = (r.user as any) ?? {};
+      uniqueUsers.set(r.user.id, publicUser as PublicUser);
+    });
+    return Array.from(uniqueUsers.values()) as any;
   }
 
   async createDepartment(dept: InsertDepartment): Promise<Department> {
@@ -136,8 +151,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateProject(id: number, updates: Partial<Project>): Promise<Project> {
-      const [p] = await db.update(projects).set(updates).where(eq(projects.id, id)).returning();
-      return p;
+    const [p] = await db.update(projects).set(updates).where(eq(projects.id, id)).returning();
+    return p;
   }
 
   async getTransactions(userId?: string): Promise<Transaction[]> {
@@ -171,11 +186,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async markAttendance(att: InsertAttendance): Promise<void> {
-      await db.insert(attendance).values(att);
+    await db.insert(attendance).values(att);
   }
 
   async getEventAttendance(eventId: number): Promise<any[]> {
-      return db.select().from(attendance).where(eq(attendance.eventId, eventId));
+    return db.select().from(attendance).where(eq(attendance.eventId, eventId));
   }
 }
 

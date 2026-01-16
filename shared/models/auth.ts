@@ -44,6 +44,10 @@ export const users = pgTable("users", {
   // Member Identification
   memberId: text("member_id").unique(), // Auto-generated unique ID
 
+  // Local auth (email/password)
+  passwordHash: text("password_hash"),
+  passwordSalt: text("password_salt"),
+
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
