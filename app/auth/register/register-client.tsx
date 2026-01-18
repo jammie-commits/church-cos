@@ -56,14 +56,12 @@ export function RegisterClient() {
     };
 
     return (
-        <div className="relative flex min-h-screen w-full items-center justify-center bg-[#0a0a0a] text-white p-6">
-            {/* Background gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/10 via-black/0 to-brand-lime/10"></div>
+        <div className="relative flex min-h-screen w-full items-center justify-center bg-background-light dark:bg-background-dark text-foreground p-6">
 
             {/* Back to home link */}
             <Link
                 href="/"
-                className="absolute top-6 left-6 flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                className="absolute top-6 left-6 flex items-center gap-2 text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white transition-colors"
             >
                 <span className="material-symbols-outlined">arrow_back</span>
                 <span className="text-sm font-medium">Back to home</span>
@@ -72,14 +70,14 @@ export function RegisterClient() {
             {/* Register form */}
             <div className="relative w-full max-w-md">
                 <div className="mb-8 text-center">
-                    <div className="mb-4 inline-flex size-16 items-center justify-center bg-gradient-to-br from-brand-purple to-brand-lime rounded-2xl">
+                    <div className="mb-4 inline-flex size-16 items-center justify-center bg-brand-purple rounded-2xl ring-2 ring-brand-lime/25">
                         <span className="material-symbols-outlined text-white text-3xl">church</span>
                     </div>
                     <h1 className="text-3xl font-bold mb-2">Get started</h1>
-                    <p className="text-gray-400">Create your account - Step 1 of 2</p>
+                    <p className="text-slate-600 dark:text-gray-400">Create your account - Step 1 of 2</p>
                 </div>
 
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+                <div className="bg-white/80 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-8 backdrop-blur-sm shadow-[0_18px_60px_-35px_rgba(106,13,173,0.35)]">
                     <form onSubmit={handleRegister} className="space-y-5">
                         {error && (
                             <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
@@ -98,7 +96,7 @@ export function RegisterClient() {
                                     type="text"
                                     value={formData.firstName}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/60 focus:border-brand-purple/40 transition-all dark:bg-white/5 dark:border-white/10"
                                     placeholder="John"
                                     required
                                 />
@@ -114,7 +112,7 @@ export function RegisterClient() {
                                     type="text"
                                     value={formData.lastName}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/60 focus:border-brand-purple/40 transition-all dark:bg-white/5 dark:border-white/10"
                                     placeholder="Doe"
                                     required
                                 />
@@ -131,7 +129,7 @@ export function RegisterClient() {
                                 type="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/60 focus:border-brand-purple/40 transition-all dark:bg-white/5 dark:border-white/10"
                                 placeholder="you@example.com"
                                 required
                             />
@@ -147,7 +145,7 @@ export function RegisterClient() {
                                 type="password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/60 focus:border-brand-purple/40 transition-all dark:bg-white/5 dark:border-white/10"
                                 placeholder="••••••••"
                                 required
                             />
@@ -163,7 +161,7 @@ export function RegisterClient() {
                                 type="password"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+                                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/60 focus:border-brand-purple/40 transition-all dark:bg-white/5 dark:border-white/10"
                                 placeholder="••••••••"
                                 required
                             />
@@ -172,7 +170,7 @@ export function RegisterClient() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full px-6 py-3 bg-brand-purple hover:brightness-110 disabled:bg-brand-purple/50 rounded-xl font-bold transition-all hover:scale-[1.02] disabled:scale-100"
+                            className="w-full px-6 py-3 bg-brand-purple text-white hover:bg-brand-purple/90 disabled:opacity-60 rounded-xl font-bold transition-all hover:scale-[1.02] disabled:scale-100"
                         >
                             {loading ? (
                                 <span className="flex items-center justify-center gap-2">
@@ -186,7 +184,7 @@ export function RegisterClient() {
                     </form>
 
                     <div className="mt-6 text-center">
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-slate-600 dark:text-gray-400">
                             Already have an account?{" "}
                             <Link href="/auth/login" className="text-brand-lime hover:opacity-90 font-semibold">
                                 Sign in
@@ -195,7 +193,7 @@ export function RegisterClient() {
                     </div>
                 </div>
 
-                <p className="mt-6 text-center text-xs text-gray-500">
+                <p className="mt-6 text-center text-xs text-slate-500 dark:text-gray-500">
                     By creating an account, you agree to our Terms of Service and Privacy Policy
                 </p>
             </div>

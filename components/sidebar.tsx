@@ -63,33 +63,34 @@ export function Sidebar({
         <>
             {/* Desktop Sidebar */}
             <aside
-                className={`hidden md:flex fixed left-0 top-0 h-screen w-64 border-r border-white/10 bg-black/80 backdrop-blur-xl z-50 ${desktopAsideClass}`}
+                className={`hidden md:flex fixed left-0 top-0 h-screen w-64 border-r border-slate-200/60 dark:border-white/10 bg-brand-purple/5 dark:bg-black z-50 ${desktopAsideClass}`}
                 onMouseEnter={() => onDesktopOpenChange?.(true)}
                 onMouseLeave={() => onDesktopOpenChange?.(false)}
             >
                 <div className="flex flex-col w-full">
                     {/* Logo/Brand */}
-                    <div className="flex items-center justify-between p-6 border-b border-white/10">
+                    <div className="flex items-center justify-between p-6 border-b border-slate-200/60 dark:border-white/10">
                         <Link href={variant === "admin" ? "/admin" : "/dashboard"} className="flex items-center gap-3">
-                            <div className="size-10 bg-gradient-to-br from-brand-purple to-brand-lime rounded-xl flex items-center justify-center">
+                            <div className="size-10 bg-brand-purple rounded-xl flex items-center justify-center ring-2 ring-brand-lime/25">
                                 <span className="material-symbols-outlined text-white">church</span>
                             </div>
                             <div>
-                                <h1 className="text-lg font-bold tracking-tight">JTW CMS</h1>
-                                <p className="text-xs text-gray-400">{variant === "admin" ? "Admin Console" : "Members Portal"}</p>
+                                <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">JTW CMS</h1>
+                                <p className="text-xs text-slate-600 dark:text-gray-400">{variant === "admin" ? "Admin Console" : "Members Portal"}</p>
                             </div>
                         </Link>
                     </div>
 
                     {/* Navigation */}
                     <nav className="flex-1 overflow-y-auto p-4">
-                        <p className="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        <p className="px-3 mb-2 text-xs font-semibold text-slate-500 dark:text-gray-500 uppercase tracking-wider">
                             {variant === "admin" ? "Administration" : "Navigation"}
                         </p>
                         <div className="space-y-1">
                             {navItems.map((item) => {
                                 const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-                                const activeClass = "bg-brand-purple/35 text-white border-brand-lime";
+                                const activeClass =
+                                    "bg-brand-purple/15 dark:bg-brand-purple/35 text-slate-900 dark:text-white border-brand-purple";
 
                                 return (
                                     <Link
@@ -99,7 +100,7 @@ export function Sidebar({
                                         className={`flex items-center gap-3 py-3 pr-3 pl-3 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/15 border-l-4 ${
                                             isActive
                                                 ? activeClass
-                                                : "border-transparent text-gray-300/80 hover:bg-white/5 hover:text-white"
+                                                : "border-transparent text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-gray-300/80 dark:hover:bg-white/5 dark:hover:text-white"
                                         }`}
                                     >
                                         <span className="material-symbols-outlined text-xl">{item.icon}</span>
@@ -111,11 +112,11 @@ export function Sidebar({
                     </nav>
 
                     {/* Collapse Toggle */}
-                    <div className="p-4 border-t border-white/10">
+                    <div className="p-4 border-t border-slate-200/60 dark:border-white/10">
                         <Link
                             href="/auth/logout"
                             onClick={onNavigate}
-                            className="mb-2 w-full flex items-center justify-center gap-2 px-3 py-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all"
+                            className="mb-2 w-full flex items-center justify-center gap-2 px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5 rounded-xl transition-all"
                         >
                             <span className="material-symbols-outlined">logout</span>
                             <span className="text-sm font-medium">Sign out</span>
@@ -125,7 +126,7 @@ export function Sidebar({
             </aside>
 
             {/* Mobile Bottom Nav */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 backdrop-blur-xl bg-black/80">
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200/60 dark:border-white/10 bg-brand-purple/5 dark:bg-black">
                 <div className="flex items-center h-16 px-2 pb-[env(safe-area-inset-bottom)]" aria-label="Bottom navigation">
                     {mobileItems.map((item) => {
                         const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
@@ -135,7 +136,7 @@ export function Sidebar({
                                 href={item.href}
                                 aria-label={item.label}
                                 className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-1 px-1 transition-colors ${
-                                    isActive ? activeTextClass : "text-gray-400 hover:text-white"
+                                    isActive ? activeTextClass : "text-slate-500 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white"
                                 }`}
                             >
                                 <span className={`material-symbols-outlined text-xl ${isActive ? "font-bold" : ""}`}>

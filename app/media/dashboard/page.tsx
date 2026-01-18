@@ -17,7 +17,7 @@ export default function MediaDashboard() {
                 <div className="max-w-7xl mx-auto w-full">
                     {/* Hero Stats Card */}
                     <div className="px-4 py-4 md:px-6 md:py-6">
-                        <div className="bg-gradient-to-br from-primary-premium/80 to-brand-lime/30 rounded-2xl p-6 text-white shadow-lg border border-white/10">
+                        <div className="bg-brand-purple rounded-2xl p-6 text-white shadow-lg border border-brand-purple/20">
                             <div className="flex items-center justify-between mb-4">
                                 <div>
                                     <p className="text-white/80 text-xs font-bold uppercase tracking-wider opacity-90">
@@ -48,48 +48,48 @@ export default function MediaDashboard() {
 
                     {/* Quick Actions */}
                     <div className="px-4 pb-4 md:px-6">
-                        <h3 className="text-lg font-bold text-white mb-3">Quick Actions</h3>
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Quick Actions</h3>
                         <div className="grid grid-cols-2 gap-3">
-                            <button className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-4 active:scale-95 transition-all">
-                                <div className="flex size-12 items-center justify-center rounded-xl bg-primary-premium/15 text-brand-lime border border-brand-purple/30">
+                            <button className="flex flex-col gap-3 rounded-xl border border-slate-200/60 dark:border-white/10 bg-white dark:bg-white/5 p-4 active:scale-95 transition-all">
+                                <div className="flex size-12 items-center justify-center rounded-xl bg-white/15 text-brand-secondary border border-white/20">
                                     <span className="material-symbols-outlined text-xl">cloud_upload</span>
                                 </div>
                                 <div>
-                                    <h4 className="text-white text-sm font-bold text-left">Upload Media</h4>
-                                    <p className="mt-1 text-xs text-gray-400">Coming soon</p>
+                                    <h4 className="text-slate-900 dark:text-white text-sm font-bold text-left">Upload Media</h4>
+                                    <p className="mt-1 text-xs text-slate-600 dark:text-gray-400">Coming soon</p>
                                 </div>
                             </button>
-                            <button className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-4 active:scale-95 transition-all">
+                            <button className="flex flex-col gap-3 rounded-xl border border-slate-200/60 dark:border-white/10 bg-white dark:bg-white/5 p-4 active:scale-95 transition-all">
                                 <div className="flex size-12 items-center justify-center rounded-xl bg-green-500/15 text-green-300 border border-green-500/20">
                                     <span className="material-symbols-outlined text-xl">videocam</span>
                                 </div>
                                 <div>
-                                    <h4 className="text-white text-sm font-bold text-left">Start Stream</h4>
-                                    <p className="mt-1 text-xs text-gray-400">Coming soon</p>
+                                    <h4 className="text-slate-900 dark:text-white text-sm font-bold text-left">Start Stream</h4>
+                                    <p className="mt-1 text-xs text-slate-600 dark:text-gray-400">Coming soon</p>
                                 </div>
                             </button>
                             <Link
                                 href="/media/inventory"
-                                className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-4 active:scale-95 transition-all"
+                                className="flex flex-col gap-3 rounded-xl border border-slate-200/60 dark:border-white/10 bg-white dark:bg-white/5 p-4 active:scale-95 transition-all"
                             >
-                                <div className="flex size-12 items-center justify-center rounded-xl bg-primary-premium/15 text-brand-lime border border-brand-purple/30">
+                                <div className="flex size-12 items-center justify-center rounded-xl bg-brand-purple/10 text-brand-purple border border-brand-purple/20">
                                     <span className="material-symbols-outlined text-xl">inventory_2</span>
                                 </div>
                                 <div>
-                                    <h4 className="text-white text-sm font-bold text-left">Equipment</h4>
-                                    <p className="mt-1 text-xs text-gray-400">Inventory & usage</p>
+                                    <h4 className="text-slate-900 dark:text-white text-sm font-bold text-left">Equipment</h4>
+                                    <p className="mt-1 text-xs text-slate-600 dark:text-gray-400">Inventory & usage</p>
                                 </div>
                             </Link>
                             <Link
                                 href="/events"
-                                className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-4 active:scale-95 transition-all"
+                                className="flex flex-col gap-3 rounded-xl border border-slate-200/60 dark:border-white/10 bg-white dark:bg-white/5 p-4 active:scale-95 transition-all"
                             >
-                                <div className="flex size-12 items-center justify-center rounded-xl bg-primary-premium/15 text-brand-lime border border-brand-purple/30">
+                                <div className="flex size-12 items-center justify-center rounded-xl bg-brand-purple/10 text-brand-purple border border-brand-purple/20">
                                     <span className="material-symbols-outlined text-xl">event</span>
                                 </div>
                                 <div>
-                                    <h4 className="text-white text-sm font-bold text-left">Schedule</h4>
-                                    <p className="mt-1 text-xs text-gray-400">Upcoming events</p>
+                                    <h4 className="text-slate-900 dark:text-white text-sm font-bold text-left">Schedule</h4>
+                                    <p className="mt-1 text-xs text-slate-600 dark:text-gray-400">Upcoming events</p>
                                 </div>
                             </Link>
                         </div>

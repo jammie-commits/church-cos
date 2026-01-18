@@ -16,7 +16,9 @@ export default {
       colors: {
         // Brand palette
         "brand-purple": "#6A0DAD",
-        "brand-lime": "#A0F030",
+        // Secondary accent (replaces lime green for better contrast on white)
+        "brand-lime": "#14B8A6",
+        "brand-secondary": "#14B8A6",
 
         // Legacy token used across the UI for the main accent
         "primary-premium": "#6A0DAD",

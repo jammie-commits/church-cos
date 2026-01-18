@@ -124,19 +124,17 @@ export default function CompleteProfilePage() {
     ];
 
     return (
-        <div className="relative flex min-h-screen w-full bg-[#0a0a0a] text-white">
-            {/* Background gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/10 via-black/0 to-brand-lime/10"></div>
+        <div className="relative flex min-h-screen w-full bg-background-light dark:bg-background-dark text-foreground">
             
             {/* Main Content */}
             <div className="relative w-full max-w-6xl mx-auto p-6 py-12">
                 {/* Header */}
                 <div className="mb-8 text-center">
-                    <div className="mb-4 inline-flex size-16 items-center justify-center bg-gradient-to-br from-brand-purple to-brand-lime rounded-2xl">
+                    <div className="mb-4 inline-flex size-16 items-center justify-center bg-brand-purple rounded-2xl ring-2 ring-brand-lime/25">
                         <span className="material-symbols-outlined text-white text-3xl">church</span>
                     </div>
                     <h1 className="text-4xl font-bold mb-2">Complete Your Profile</h1>
-                    <p className="text-gray-400">Step 2 of 2 - Help us know you better</p>
+                    <p className="text-slate-600 dark:text-gray-400">Step 2 of 2 - Help us know you better</p>
                     <Suspense fallback={null}>
                         <MemberIdBanner />
                     </Suspense>
@@ -154,14 +152,14 @@ export default function CompleteProfilePage() {
                                             ? "bg-brand-purple text-white"
                                             : currentSection > section.id
                                             ? "bg-brand-lime/20 text-brand-lime"
-                                            : "bg-white/5 text-gray-400"
+                                            : "bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 text-slate-600 dark:text-gray-400"
                                     }`}
                                 >
                                     <span className="material-symbols-outlined text-xl">{section.icon}</span>
                                     <span className="text-sm font-medium hidden sm:inline">{section.title}</span>
                                 </button>
                                 {index < sections.length - 1 && (
-                                    <div className="w-8 h-0.5 bg-white/10 mx-1"></div>
+                                    <div className="w-8 h-0.5 bg-slate-200/60 dark:bg-white/10 mx-1"></div>
                                 )}
                             </div>
                         ))}
@@ -169,7 +167,7 @@ export default function CompleteProfilePage() {
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm max-w-4xl mx-auto">
+                <form onSubmit={handleSubmit} className="bg-white/85 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-8 backdrop-blur-sm max-w-4xl mx-auto shadow-[0_18px_60px_-35px_rgba(106,13,173,0.35)]">
                     {error && (
                         <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                             {error}
@@ -187,7 +185,7 @@ export default function CompleteProfilePage() {
                             {/* Profile Photo */}
                             <div className="flex flex-col items-center mb-6">
                                 <div className="relative mb-4">
-                                    <div className="size-32 rounded-full bg-gradient-to-br from-brand-purple to-brand-lime flex items-center justify-center overflow-hidden">
+                                    <div className="size-32 rounded-full bg-brand-purple flex items-center justify-center overflow-hidden ring-4 ring-brand-lime/20">
                                         {profilePhoto ? (
                                             <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
                                         ) : (
@@ -199,7 +197,7 @@ export default function CompleteProfilePage() {
                                         <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
                                     </label>
                                 </div>
-                                <p className="text-sm text-gray-400">Upload profile photo</p>
+                                <p className="text-sm text-slate-600 dark:text-gray-400">Upload profile photo</p>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

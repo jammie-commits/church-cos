@@ -12,12 +12,44 @@ function stripWrappingQuotes(value: string): string {
   return trimmed;
 }
 
-function buildSslOptions(url: string): pg.ConnectionOptions["ssl"] | undefined {
+function stripQueryParam(url: string, param: string): string {
   let parsed: URL;
   try {
     parsed = new URL(url);
   } catch {
-    return undefined;
+    return url;
+  }
+
+  if (!parsed.searchParams.has(param)) return url;
+  parsed.searchParams.delete(param);
+  return parsed.toString();
+}
+
+function buildSslOptions(url: string): pg.PoolConfig["ssl"] | undefined {
+  const rejectUnauthorizedRaw =
+    process.env.DB_SSL_REJECT_UNAUTHORIZED ?? process.env.PGSSL_REJECT_UNAUTHORIZED;
+  const rejectUnauthorizedOverride =
+    rejectUnauthorizedRaw == null
+      ? undefined
+      : !["0", "false", "no"].includes(rejectUnauthorizedRaw.toLowerCase());
+
+  // If the caller explicitly disables verification, honor it even if the URL
+  // is malformed or doesn't include sslmode.
+  if (rejectUnauthorizedOverride === false) {
+    return {
+      rejectUnauthorized: false,
+      checkServerIdentity: () => undefined,
+    };
+  }
+
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    // If the caller explicitly requested verification, keep it.
+    return rejectUnauthorizedOverride === true
+      ? { rejectUnauthorized: true }
+      : undefined;
   }
 
   const sslmode = parsed.searchParams.get("sslmode");
@@ -34,17 +66,13 @@ function buildSslOptions(url: string): pg.ConnectionOptions["ssl"] | undefined {
   if (!wantsSsl) return undefined;
 
   if (sslmode === "no-verify") {
-    return { rejectUnauthorized: false };
+    return {
+      rejectUnauthorized: false,
+      checkServerIdentity: () => undefined,
+    };
   }
 
-  const rejectUnauthorizedRaw =
-    process.env.DB_SSL_REJECT_UNAUTHORIZED ?? process.env.PGSSL_REJECT_UNAUTHORIZED;
-  const rejectUnauthorized =
-    rejectUnauthorizedRaw == null
-      ? true
-      : !["0", "false", "no"].includes(rejectUnauthorizedRaw.toLowerCase());
-
-  return { rejectUnauthorized };
+  return { rejectUnauthorized: rejectUnauthorizedOverride ?? true };
 }
 
 const databaseUrl =
@@ -60,8 +88,16 @@ if (!databaseUrl) {
 }
 
 const connectionString = stripWrappingQuotes(databaseUrl);
+const ssl = buildSslOptions(connectionString);
+
+// `pg` will derive SSL behavior from `sslmode` in the connection string and can
+// override explicit `ssl` options. When we supply an `ssl` config object, strip
+// `sslmode` so that our options win.
+const sanitizedConnectionString =
+  ssl == null ? connectionString : stripQueryParam(connectionString, "sslmode");
+
 export const pool = new Pool({
-  connectionString,
-  ssl: buildSslOptions(connectionString),
+  connectionString: sanitizedConnectionString,
+  ssl,
 });
 export const db = drizzle(pool, { schema });

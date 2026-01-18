@@ -19,26 +19,26 @@ export default async function Projects() {
             <div className="px-4 py-4 md:px-6 md:py-6 max-w-7xl mx-auto w-full">
                 {/* Overview Stats */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-gradient-to-br from-brand-purple/20 to-brand-purple/10 border border-brand-purple/20 rounded-2xl p-5">
+                    <div className="bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-5">
                         <div className="flex items-center gap-2 mb-3">
-                            <div className="p-2 bg-brand-purple/20 rounded-lg">
-                                <span className="material-symbols-outlined text-brand-lime">trending_up</span>
+                            <div className="p-2 bg-brand-purple/10 rounded-lg">
+                                <span className="material-symbols-outlined text-brand-purple">trending_up</span>
                             </div>
                         </div>
-                        <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">Active</p>
+                        <p className="text-slate-600 dark:text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">Active</p>
                         <p className="text-2xl font-bold">{activeCount}</p>
-                        <p className="text-xs text-gray-500 mt-2">In progress right now</p>
+                        <p className="text-xs text-slate-500 dark:text-gray-500 mt-2">In progress right now</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-brand-purple/20 to-brand-purple/10 border border-brand-purple/20 rounded-2xl p-5">
+                    <div className="bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-5">
                         <div className="flex items-center gap-2 mb-3">
-                            <div className="p-2 bg-brand-purple/20 rounded-lg">
-                                <span className="material-symbols-outlined text-brand-lime">business</span>
+                            <div className="p-2 bg-brand-purple/10 rounded-lg">
+                                <span className="material-symbols-outlined text-brand-purple">business</span>
                             </div>
                         </div>
-                        <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">All Projects</p>
+                        <p className="text-slate-600 dark:text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">All Projects</p>
                         <p className="text-2xl font-bold">{projects.length}</p>
-                        <p className="text-xs text-gray-500 mt-2">{upcomingCount} upcoming</p>
+                        <p className="text-xs text-slate-500 dark:text-gray-500 mt-2">{upcomingCount} upcoming</p>
                     </div>
                 </div>
 
@@ -66,12 +66,12 @@ export default async function Projects() {
                             <Link
                                 key={project.id}
                                 href={`/projects/${project.id}`}
-                                className="block bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-6 transition-all group"
+                                className="block bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 border border-slate-200/60 dark:border-white/10 rounded-2xl p-6 transition-all group"
                             >
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <span className="px-2 py-1 bg-brand-purple/20 text-brand-lime text-[10px] font-bold uppercase tracking-wider rounded">
+                                            <span className="px-2 py-1 bg-brand-purple/10 text-brand-purple text-[10px] font-bold uppercase tracking-wider rounded">
                                                 Infrastructure
                                             </span>
                                             <span className="px-2 py-1 bg-green-500/20 text-green-400 text-[10px] font-bold uppercase tracking-wider rounded">
@@ -79,9 +79,9 @@ export default async function Projects() {
                                             </span>
                                         </div>
                                         <h3 className="text-lg font-bold mb-1">{project.name}</h3>
-                                        <p className="text-sm text-gray-400">{project.description || "Building for our community"}</p>
+                                        <p className="text-sm text-slate-600 dark:text-gray-400">{project.description || "Building for our community"}</p>
                                     </div>
-                                    <span className="material-symbols-outlined text-gray-500 group-hover:text-white transition-colors ml-4">
+                                    <span className="material-symbols-outlined text-slate-500 group-hover:text-brand-purple dark:text-gray-500 dark:group-hover:text-white transition-colors ml-4">
                                         arrow_forward
                                     </span>
                                 </div>
@@ -89,32 +89,32 @@ export default async function Projects() {
                                 <div className="space-y-3">
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-sm font-bold text-brand-lime">{Math.round(progress)}% Complete</span>
-                                            <span className="text-xs text-gray-500">{target > 0 ? "Target set" : "No target"}</span>
+                                            <span className="text-sm font-bold text-brand-purple">{Math.round(progress)}% Complete</span>
+                                            <span className="text-xs text-slate-500 dark:text-gray-500">{target > 0 ? "Target set" : "No target"}</span>
                                         </div>
-                                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                                        <div className="h-2 bg-slate-200/70 dark:bg-white/10 rounded-full overflow-hidden">
                                             <div
-                                                className="h-full bg-gradient-to-r from-brand-purple to-brand-lime rounded-full transition-all"
+                                                className="h-full bg-brand-purple rounded-full transition-all"
                                                 style={{ width: `${progress}%` }}
                                             ></div>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center justify-between pt-3 border-t border-white/5">
+                                    <div className="flex items-center justify-between pt-3 border-t border-slate-200/60 dark:border-white/5">
                                         <div className="flex -space-x-2">
                                             {[1, 2, 3].map((i) => (
                                                 <div
                                                     key={i}
-                                                    className="size-8 rounded-full bg-gradient-to-br from-brand-purple to-brand-lime border-2 border-black flex items-center justify-center text-xs font-bold text-black"
+                                                    className="size-8 rounded-full bg-brand-purple border-2 border-white flex items-center justify-center text-xs font-bold text-white"
                                                 >
                                                     {String.fromCharCode(64 + i)}
                                                 </div>
                                             ))}
-                                            <div className="size-8 rounded-full bg-white/10 border-2 border-black flex items-center justify-center text-xs font-semibold text-gray-400">
+                                            <div className="size-8 rounded-full bg-slate-100 dark:bg-white/10 border-2 border-white flex items-center justify-center text-xs font-semibold text-slate-600 dark:text-gray-400">
                                                 +{Math.floor(Math.random() * 20)}
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-2 text-brand-lime text-sm font-semibold">
+                                        <div className="flex items-center gap-2 text-brand-purple text-sm font-semibold">
                                             <span>View Details</span>
                                             <span className="material-symbols-outlined text-sm">arrow_forward</span>
                                         </div>

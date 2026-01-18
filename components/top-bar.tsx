@@ -30,11 +30,11 @@ export function TopBar({
     };
 
     return (
-        <div className="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 gap-2">
+        <div className="flex items-center bg-white/70 dark:bg-background-dark/80 backdrop-blur-xl border-b border-slate-200/60 dark:border-white/10 p-4 pb-2 justify-between sticky top-0 z-10 gap-2">
             {showBack ? (
                 <button
                     onClick={handleBackClick}
-                    className="flex size-10 items-center justify-center rounded-full bg-gray-200 dark:bg-[#232f48] text-gray-700 dark:text-white"
+                    className="flex size-10 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-[#232f48] text-slate-800 dark:text-white transition-colors"
                 >
                     <span className="material-symbols-outlined text-[22px]">arrow_back_ios_new</span>
                 </button>
@@ -60,14 +60,14 @@ export function TopBar({
 
             <div className="flex gap-2 items-center shrink-0">
                 {showSearch && (
-                    <button className="flex size-10 items-center justify-center rounded-full bg-gray-200 dark:bg-[#232f48] text-gray-700 dark:text-white">
+                    <button className="flex size-10 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-[#232f48] text-slate-800 dark:text-white transition-colors">
                         <span className="material-symbols-outlined text-[22px]">search</span>
                     </button>
                 )}
                 {showNotifications && (
-                    <button className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-gray-200 dark:bg-[#232f48] text-gray-700 dark:text-white px-3">
+                    <button className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-[#232f48] text-slate-800 dark:text-white px-3 transition-colors">
                         <span className="material-symbols-outlined text-[22px]">notifications</span>
-                        <span className="size-2 bg-red-500 rounded-full border-2 border-gray-200 dark:border-background-dark" aria-hidden="true"></span>
+                        <span className="size-2 bg-red-500 rounded-full border-2 border-slate-100 dark:border-background-dark" aria-hidden="true"></span>
                     </button>
                 )}
             </div>

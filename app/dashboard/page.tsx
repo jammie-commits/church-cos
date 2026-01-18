@@ -43,83 +43,83 @@ export default async function Dashboard() {
             <div className="px-4 py-4 md:px-6 md:py-6 max-w-7xl mx-auto w-full">
                 {/* Key Metrics Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-gradient-to-br from-brand-purple/20 to-brand-purple/10 border border-brand-purple/20 rounded-2xl p-5 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-5">
                         <div className="flex items-start justify-between mb-3">
-                            <div className="p-2 bg-brand-purple/20 rounded-lg">
-                                <span className="material-symbols-outlined text-brand-lime text-xl">payments</span>
+                            <div className="p-2 bg-brand-purple/10 rounded-lg">
+                                <span className="material-symbols-outlined text-brand-purple text-xl">payments</span>
                             </div>
-                            <div className="px-2 py-1 bg-green-500/20 rounded-full flex items-center gap-1">
-                                <span className="text-green-400 text-xs font-bold">↑{givingGrowth}%</span>
+                            <div className="px-2 py-1 bg-emerald-50 dark:bg-green-500/20 rounded-full flex items-center gap-1 border border-emerald-200/60 dark:border-transparent">
+                                <span className="text-emerald-700 dark:text-green-400 text-xs font-bold">↑{givingGrowth}%</span>
                             </div>
                         </div>
-                        <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">My Giving</p>
+                        <p className="text-slate-600 dark:text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">My Giving</p>
                         <p className="text-2xl font-bold mb-1">{formattedGiving}</p>
-                        <p className="text-xs text-gray-500">YTD Performance</p>
+                        <p className="text-xs text-slate-500 dark:text-gray-500">YTD Performance</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-brand-purple/20 to-brand-purple/10 border border-brand-purple/20 rounded-2xl p-5 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-5">
                         <div className="flex items-start justify-between mb-3">
-                            <div className="p-2 bg-brand-purple/20 rounded-lg">
-                                <span className="material-symbols-outlined text-brand-lime text-xl">groups</span>
+                            <div className="p-2 bg-brand-purple/10 rounded-lg">
+                                <span className="material-symbols-outlined text-brand-purple text-xl">groups</span>
                             </div>
-                            <div className="px-2 py-1 bg-brand-purple/20 rounded-full flex items-center gap-1">
-                                <span className="text-brand-lime text-xs font-bold">Joined</span>
+                            <div className="px-2 py-1 bg-brand-purple/10 rounded-full flex items-center gap-1 border border-brand-purple/15">
+                                <span className="text-brand-purple text-xs font-bold">Joined</span>
                             </div>
                         </div>
-                        <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">My Groups</p>
+                        <p className="text-slate-600 dark:text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">My Groups</p>
                         <p className="text-2xl font-bold mb-1">{groupIds.length}</p>
-                        <p className="text-xs text-gray-500">Departments joined</p>
+                        <p className="text-xs text-slate-500 dark:text-gray-500">Departments joined</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-green-600/20 to-green-500/10 border border-green-500/20 rounded-2xl p-5 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-5">
                         <div className="flex items-start justify-between mb-3">
-                            <div className="p-2 bg-green-500/20 rounded-lg">
-                                <span className="material-symbols-outlined text-green-400 text-xl">event</span>
+                            <div className="p-2 bg-brand-lime/10 rounded-lg">
+                                <span className="material-symbols-outlined text-brand-lime text-xl">event</span>
                             </div>
-                            <div className="px-2 py-1 bg-brand-purple/20 rounded-full">
+                            <div className="px-2 py-1 bg-brand-lime/10 rounded-full border border-brand-lime/15">
                                 <span className="text-brand-lime text-xs font-bold">{avgAttendance}%</span>
                             </div>
                         </div>
-                        <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">Events</p>
+                        <p className="text-slate-600 dark:text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">Events</p>
                         <p className="text-2xl font-bold mb-1">{events.length}</p>
-                        <p className="text-xs text-gray-500">Upcoming activities</p>
+                        <p className="text-xs text-slate-500 dark:text-gray-500">Upcoming activities</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-green-600/20 to-green-500/10 border border-green-500/20 rounded-2xl p-5 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-5">
                         <div className="flex items-start justify-between mb-3">
-                            <div className="p-2 bg-green-500/20 rounded-lg">
-                                <span className="material-symbols-outlined text-green-400 text-xl">business</span>
+                            <div className="p-2 bg-brand-lime/10 rounded-lg">
+                                <span className="material-symbols-outlined text-brand-lime text-xl">business</span>
                             </div>
-                            <div className="px-2 py-1 bg-green-500/20 rounded-full">
-                                <span className="text-green-400 text-xs font-bold">Active</span>
+                            <div className="px-2 py-1 bg-brand-lime/10 rounded-full border border-brand-lime/15">
+                                <span className="text-brand-lime text-xs font-bold">Active</span>
                             </div>
                         </div>
-                        <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">Projects</p>
+                        <p className="text-slate-600 dark:text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">Projects</p>
                         <p className="text-2xl font-bold mb-1">{activeProjects.length}</p>
-                        <p className="text-xs text-gray-500">In progress</p>
+                        <p className="text-xs text-slate-500 dark:text-gray-500">In progress</p>
                     </div>
                 </div>
 
                 {/* Giving Analytics */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                    <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <div className="lg:col-span-2 bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-6">
                         <div className="flex items-center justify-between gap-4 mb-6">
                             <div>
                                 <h2 className="text-lg font-bold">Giving Trend</h2>
-                                <p className="text-sm text-gray-400 mt-0.5">Last 6 months</p>
+                                <p className="text-sm text-slate-600 dark:text-gray-400 mt-0.5">Last 6 months</p>
                             </div>
-                            <div className="flex items-center gap-2 text-xs text-gray-400">
-                                <span className="material-symbols-outlined text-[18px] text-brand-lime">bar_chart</span>
+                            <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-gray-400">
+                                <span className="material-symbols-outlined text-[18px] text-brand-purple">bar_chart</span>
                                 <span className="font-semibold">Monthly totals</span>
                             </div>
                         </div>
                         <MonthlyGivingChart data={monthlyGiving} />
                     </div>
 
-                    <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <div className="bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-6">
                         <div className="mb-6">
                             <h2 className="text-lg font-bold">Breakdown</h2>
-                            <p className="text-sm text-gray-400 mt-0.5">By category</p>
+                            <p className="text-sm text-slate-600 dark:text-gray-400 mt-0.5">By category</p>
                         </div>
                         <CategoryBreakdown items={givingByCategory} />
                     </div>
@@ -128,13 +128,13 @@ export default async function Dashboard() {
                 {/* Activity Overview */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                     {/* Events Timeline */}
-                    <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <div className="lg:col-span-2 bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-6">
                         <div className="flex items-center justify-between mb-6">
                             <div>
                                 <h2 className="text-lg font-bold">Upcoming Events</h2>
-                                <p className="text-sm text-gray-400 mt-0.5">Next 7 days</p>
+                                <p className="text-sm text-slate-600 dark:text-gray-400 mt-0.5">Next 7 days</p>
                             </div>
-                            <Link href="/events" className="px-4 py-2 bg-brand-purple/10 hover:bg-brand-purple/20 border border-brand-purple/20 rounded-lg text-sm font-medium text-brand-lime transition-colors">
+                            <Link href="/events" className="px-4 py-2 bg-brand-purple/10 hover:bg-brand-purple/15 border border-brand-purple/20 rounded-lg text-sm font-medium text-brand-purple transition-colors">
                                 View All
                             </Link>
                         </div>
@@ -143,11 +143,11 @@ export default async function Dashboard() {
                                 <Link
                                     key={event.id}
                                     href={`/events/${event.id}`}
-                                    className="flex items-center gap-4 p-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl transition-all group"
+                                    className="flex items-center gap-4 p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200/60 rounded-xl transition-all group dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/5"
                                 >
                                     <div className="flex-shrink-0">
-                                        <div className="w-14 h-14 bg-gradient-to-br from-brand-purple/20 to-brand-lime/15 rounded-xl flex flex-col items-center justify-center border border-white/10">
-                                            <span className="text-xs text-gray-400 font-medium">
+                                        <div className="w-14 h-14 bg-brand-purple/10 rounded-xl flex flex-col items-center justify-center border border-brand-purple/15">
+                                            <span className="text-xs text-slate-600 dark:text-gray-400 font-medium">
                                                 {new Date(event.date).toLocaleString("en", { month: "short" })}
                                             </span>
                                             <span className="text-xl font-bold">
@@ -157,7 +157,7 @@ export default async function Dashboard() {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <h3 className="font-semibold text-sm mb-1 truncate">{event.title}</h3>
-                                        <div className="flex items-center gap-3 text-xs text-gray-400">
+                                        <div className="flex items-center gap-3 text-xs text-slate-600 dark:text-gray-400">
                                             <span className="flex items-center gap-1">
                                                 <span className="material-symbols-outlined text-xs">schedule</span>
                                                 {new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -168,64 +168,64 @@ export default async function Dashboard() {
                                             </span>
                                         </div>
                                     </div>
-                                    <span className="material-symbols-outlined text-gray-500 group-hover:text-brand-lime transition-colors">arrow_forward</span>
+                                    <span className="material-symbols-outlined text-slate-500 group-hover:text-brand-purple transition-colors dark:text-gray-500 dark:group-hover:text-brand-lime">arrow_forward</span>
                                 </Link>
                             ))}
                         </div>
                     </div>
 
                     {/* Quick Actions */}
-                    <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <div className="bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-6">
                         <h2 className="text-lg font-bold mb-4">Quick Actions</h2>
                         <div className="space-y-2">
-                            <Link href="/finance" className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all group">
+                            <Link href="/finance" className="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-all group dark:bg-white/5 dark:hover:bg-white/10">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-green-500/20 rounded-lg">
                                         <span className="material-symbols-outlined text-green-400 text-xl">volunteer_activism</span>
                                     </div>
                                     <span className="font-medium text-sm">Give</span>
                                 </div>
-                                <span className="material-symbols-outlined text-gray-500 group-hover:text-white transition-colors">arrow_forward</span>
+                                <span className="material-symbols-outlined text-slate-500 group-hover:text-brand-purple transition-colors dark:text-gray-500 dark:group-hover:text-white">arrow_forward</span>
                             </Link>
-                            <Link href="/projects" className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all group">
+                            <Link href="/projects" className="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-all group dark:bg-white/5 dark:hover:bg-white/10">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-brand-purple/20 rounded-lg">
                                         <span className="material-symbols-outlined text-brand-lime text-xl">business</span>
                                     </div>
                                     <span className="font-medium text-sm">Projects</span>
                                 </div>
-                                <span className="material-symbols-outlined text-gray-500 group-hover:text-white transition-colors">arrow_forward</span>
+                                <span className="material-symbols-outlined text-slate-500 group-hover:text-brand-purple transition-colors dark:text-gray-500 dark:group-hover:text-white">arrow_forward</span>
                             </Link>
-                            <Link href="/media/dashboard" className="flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all group">
+                            <Link href="/media/dashboard" className="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-all group dark:bg-white/5 dark:hover:bg-white/10">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-brand-purple/20 rounded-lg">
                                         <span className="material-symbols-outlined text-brand-lime text-xl">videocam</span>
                                     </div>
                                     <span className="font-medium text-sm">Media</span>
                                 </div>
-                                <span className="material-symbols-outlined text-gray-500 group-hover:text-white transition-colors">arrow_forward</span>
+                                <span className="material-symbols-outlined text-slate-500 group-hover:text-brand-purple transition-colors dark:text-gray-500 dark:group-hover:text-white">arrow_forward</span>
                             </Link>
                         </div>
                     </div>
                 </div>
 
                 {/* My Groups */}
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+                <div className="bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">
                         <div>
                             <h2 className="text-lg font-bold">My Groups</h2>
-                            <p className="text-sm text-gray-400 mt-0.5">Departments you’ve joined</p>
+                            <p className="text-sm text-slate-600 dark:text-gray-400 mt-0.5">Departments you’ve joined</p>
                         </div>
                         <Link
                             href="/profile/complete"
-                            className="px-4 py-2 bg-brand-purple/10 hover:bg-brand-purple/20 border border-brand-purple/20 rounded-lg text-sm font-medium text-brand-lime transition-colors"
+                            className="px-4 py-2 bg-brand-purple/10 hover:bg-brand-purple/15 border border-brand-purple/20 rounded-lg text-sm font-medium text-brand-purple transition-colors"
                         >
                             Update
                         </Link>
                     </div>
 
                     {myGroups.length === 0 ? (
-                        <div className="rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-gray-400">
+                        <div className="rounded-xl border border-slate-200/60 dark:border-white/10 bg-slate-50 dark:bg-black/20 p-4 text-sm text-slate-600 dark:text-gray-400">
                             You haven’t joined any departments yet. Add your groups in Profile.
                         </div>
                     ) : (
@@ -233,7 +233,7 @@ export default async function Dashboard() {
                             {myGroups.map((name) => (
                                 <span
                                     key={name}
-                                    className="inline-flex items-center rounded-full border border-brand-purple/20 bg-brand-purple/10 px-3 py-1 text-xs font-bold text-brand-lime"
+                                    className="inline-flex items-center rounded-full border border-brand-purple/20 bg-brand-purple/10 px-3 py-1 text-xs font-bold text-brand-purple"
                                 >
                                     {name}
                                 </span>
@@ -243,13 +243,13 @@ export default async function Dashboard() {
                 </div>
 
                 {/* Projects Overview */}
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <div className="bg-white dark:bg-white/5 border border-slate-200/60 dark:border-white/10 rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div>
                             <h2 className="text-lg font-bold">Active Projects</h2>
-                            <p className="text-sm text-gray-400 mt-0.5">Funding progress</p>
+                            <p className="text-sm text-slate-600 dark:text-gray-400 mt-0.5">Funding progress</p>
                         </div>
-                        <Link href="/projects" className="px-4 py-2 bg-brand-purple/10 hover:bg-brand-purple/20 border border-brand-purple/20 rounded-lg text-sm font-medium text-brand-lime transition-colors">
+                        <Link href="/projects" className="px-4 py-2 bg-brand-purple/10 hover:bg-brand-purple/15 border border-brand-purple/20 rounded-lg text-sm font-medium text-brand-purple transition-colors">
                             View All
                         </Link>
                     </div>
@@ -262,25 +262,25 @@ export default async function Dashboard() {
                                 <Link
                                     key={project.id}
                                     href={`/projects/${project.id}`}
-                                    className="block p-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl transition-all"
+                                    className="block p-4 bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 border border-slate-200/60 dark:border-white/10 rounded-xl transition-all"
                                 >
                                     <div className="flex items-start justify-between mb-3">
                                         <div>
                                             <h3 className="font-semibold text-sm mb-1">{project.name}</h3>
-                                            <p className="text-xs text-gray-400">Infrastructure</p>
+                                            <p className="text-xs text-slate-600 dark:text-gray-400">Infrastructure</p>
                                         </div>
-                                        <span className="px-2 py-1 bg-brand-purple/20 text-brand-lime text-xs font-bold rounded">
+                                        <span className="px-2 py-1 bg-brand-purple/10 text-brand-purple text-xs font-bold rounded border border-brand-purple/15">
                                             {Math.round(progress)}%
                                         </span>
                                     </div>
                                     <div className="space-y-2">
-                                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                                        <div className="h-2 bg-slate-200/70 dark:bg-white/10 rounded-full overflow-hidden">
                                             <div
-                                                className="h-full bg-gradient-to-r from-brand-purple to-brand-lime rounded-full transition-all"
+                                                className="h-full bg-brand-purple rounded-full transition-all"
                                                 style={{ width: `${progress}%` }}
                                             ></div>
                                         </div>
-                                        <div className="flex justify-between text-xs text-gray-400">
+                                        <div className="flex justify-between text-xs text-slate-600 dark:text-gray-400">
                                             <span>Progress</span>
                                             <span>{target > 0 ? "Target set" : "No target"}</span>
                                         </div>

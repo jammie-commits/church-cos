@@ -76,6 +76,16 @@ export async function POST(req: Request) {
     }
 
     console.error("Login error:", err);
+    if (process.env.NODE_ENV !== "production") {
+      return NextResponse.json(
+        {
+          message: "Login failed",
+          error: err instanceof Error ? err.message : String(err),
+        },
+        { status: 500 },
+      );
+    }
+
     return NextResponse.json({ message: "Login failed" }, { status: 500 });
   }
 }

@@ -31,7 +31,7 @@ export default function RootLayout({
             <body className={`${roboto.variable} font-sans font-semibold antialiased`}>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="dark"
+                    defaultTheme="light"
                     enableSystem
                     disableTransitionOnChange
                 >

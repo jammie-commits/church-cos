@@ -35,23 +35,22 @@ export default async function Events() {
                     <div className="mb-6">
                         <Link
                             href={`/events/${events[0].id}`}
-                            className="block relative rounded-2xl overflow-hidden group"
+                            className="block relative rounded-2xl overflow-hidden group border border-slate-200/60 dark:border-white/10 bg-white dark:bg-white/5"
                         >
-                            <div className="aspect-[16/9] bg-gradient-to-br from-brand-purple/30 to-brand-lime/20 flex items-center justify-center">
-                                <span className="material-symbols-outlined text-9xl text-white/20">event</span>
+                            <div className="aspect-[16/9] bg-brand-purple/10 dark:bg-brand-purple/20 flex items-center justify-center">
+                                <span className="material-symbols-outlined text-8xl text-brand-purple/30 dark:text-white/20">event</span>
                             </div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
                             <div className="absolute inset-0 p-6 flex flex-col justify-end">
                                 <div className="flex items-center gap-2 mb-3">
                                     <span className="px-3 py-1 bg-red-500 rounded-full text-xs font-bold uppercase tracking-wider">
                                         Featured
                                     </span>
-                                    <span className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs font-bold uppercase tracking-wider">
+                                    <span className="px-3 py-1 bg-slate-100 dark:bg-white/10 rounded-full text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-white">
                                         {events[0].type || "Event"}
                                     </span>
                                 </div>
                                 <h2 className="text-2xl font-bold mb-2">{events[0].title}</h2>
-                                <div className="flex items-center gap-4 text-sm text-gray-300 mb-4">
+                                <div className="flex items-center gap-4 text-sm text-slate-600 dark:text-gray-300 mb-4">
                                     <span className="flex items-center gap-1">
                                         <span className="material-symbols-outlined text-sm">calendar_today</span>
                                         {new Date(events[0].date).toLocaleDateString("en-US", {
@@ -69,7 +68,7 @@ export default async function Events() {
                                         {events[0].location}
                                     </span>
                                 </div>
-                                <button className="px-6 py-3 bg-white text-black rounded-xl font-bold hover:bg-gray-100 transition-all group-hover:scale-105">
+                                <button className="px-6 py-3 bg-brand-purple text-white rounded-xl font-bold hover:bg-brand-purple/90 transition-all">
                                     Register Now
                                 </button>
                             </div>
@@ -83,13 +82,13 @@ export default async function Events() {
                         <Link
                             key={event.id}
                             href={`/events/${event.id}`}
-                            className="block bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl overflow-hidden transition-all group"
+                            className="block bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 border border-slate-200/60 dark:border-white/10 rounded-2xl overflow-hidden transition-all group"
                         >
                             <div className="p-5">
                                 <div className="flex items-start gap-4">
                                     <div className="flex-shrink-0">
-                                        <div className="w-16 h-16 bg-gradient-to-br from-brand-purple/20 to-brand-lime/15 rounded-xl flex flex-col items-center justify-center border border-white/10">
-                                            <span className="text-xs text-gray-400 font-medium">
+                                        <div className="w-16 h-16 bg-brand-purple/10 rounded-xl flex flex-col items-center justify-center border border-brand-purple/15">
+                                            <span className="text-xs text-slate-600 dark:text-gray-400 font-medium">
                                                 {new Date(event.date).toLocaleString("en", { month: "short" })}
                                             </span>
                                             <span className="text-2xl font-bold">
@@ -100,14 +99,14 @@ export default async function Events() {
                                     
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <span className="px-2 py-1 bg-brand-purple/20 text-brand-lime text-[10px] font-bold uppercase tracking-wider rounded">
+                                            <span className="px-2 py-1 bg-brand-purple/10 text-brand-purple text-[10px] font-bold uppercase tracking-wider rounded">
                                                 {event.type || "Event"}
                                             </span>
                                         </div>
-                                        <h3 className="text-lg font-bold mb-2 group-hover:text-brand-lime transition-colors">
+                                        <h3 className="text-lg font-bold mb-2 group-hover:text-brand-purple transition-colors">
                                             {event.title}
                                         </h3>
-                                        <div className="flex flex-wrap gap-3 text-xs text-gray-400">
+                                        <div className="flex flex-wrap gap-3 text-xs text-slate-600 dark:text-gray-400">
                                             <span className="flex items-center gap-1">
                                                 <span className="material-symbols-outlined text-xs">schedule</span>
                                                 {new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -119,7 +118,7 @@ export default async function Events() {
                                         </div>
                                     </div>
 
-                                    <span className="material-symbols-outlined text-gray-500 group-hover:text-brand-lime transition-colors">
+                                    <span className="material-symbols-outlined text-slate-500 group-hover:text-brand-purple dark:text-gray-500 dark:group-hover:text-brand-lime transition-colors">
                                         arrow_forward
                                     </span>
                                 </div>
