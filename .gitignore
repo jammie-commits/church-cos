@@ -11,7 +11,7 @@ vite.config.ts.*
 
 # Local env/secrets
 .env
-.env.*
+
 .local
 
 # Logs
