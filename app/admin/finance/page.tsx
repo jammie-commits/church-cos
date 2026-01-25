@@ -5,6 +5,7 @@ import { MonthlyGivingChart } from "@/components/analytics/monthly-giving-chart"
 import { CategoryBreakdown } from "@/components/analytics/category-breakdown";
 import { formatCurrency, groupTransactionsByCategory, groupTransactionsByMonth } from "@/server/analytics";
 import { requireAdminSession } from "@/server/require-admin";
+import Link from "next/link";
 
 export default async function AdminFinance() {
     await requireAdminSession();
@@ -70,6 +71,21 @@ export default async function AdminFinance() {
                     </section>
 
                     {/* Analytics */}
+                    <section className="px-4 pt-2">
+                        <Link
+                            href="/admin/finance/budget"
+                            className="block rounded-2xl border border-emerald-200/60 dark:border-white/10 bg-emerald-50/60 dark:bg-emerald-500/10 p-5 hover:bg-emerald-50 dark:hover:bg-emerald-500/15 transition-colors"
+                        >
+                            <div className="flex items-start justify-between gap-4">
+                                <div>
+                                    <p className="text-sm font-extrabold text-slate-900 dark:text-white">Finance Budget</p>
+                                    <p className="mt-1 text-sm text-slate-600 dark:text-gray-400">Allocate budgets for projects & utilities, and approve department requests.</p>
+                                </div>
+                                <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400">request_quote</span>
+                            </div>
+                        </Link>
+                    </section>
+
                     <section className="px-4 py-2">
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                             <div className="lg:col-span-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">

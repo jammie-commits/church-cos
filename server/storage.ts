@@ -1,10 +1,15 @@
 import { db } from "./db";
 import {
   users, departments, events, projects, transactions, notifications, attendance, userDepartments,
+  utilities, projectBudgets, utilityBudgets, departmentBudgetRequests,
   type User, type InsertUser, type UpdateUserRequest,
   type Department, type InsertDepartment,
   type Event, type InsertEvent,
   type Project, type InsertProject,
+  type Utility, type InsertUtility,
+  type ProjectBudget,
+  type UtilityBudget,
+  type DepartmentBudgetRequest, type InsertDepartmentBudgetRequest,
   type Transaction, type InsertTransaction,
   type Notification,
   type InsertAttendance
@@ -38,6 +43,27 @@ export interface IStorage {
   getProject(id: number): Promise<Project | undefined>;
   createProject(project: InsertProject): Promise<Project>;
   updateProject(id: number, project: Partial<Project>): Promise<Project>;
+
+  // Utilities
+  getUtilities(): Promise<Utility[]>;
+  createUtility(utility: InsertUtility): Promise<Utility>;
+  updateUtility(id: number, updates: Partial<Utility>): Promise<Utility>;
+
+  // Budgets
+  getProjectBudgets(year: number): Promise<ProjectBudget[]>;
+  upsertProjectBudget(input: { projectId: number; year: number; amount: string }): Promise<ProjectBudget>;
+  getUtilityBudgets(year: number): Promise<UtilityBudget[]>;
+  upsertUtilityBudget(input: { utilityId: number; year: number; amount: string }): Promise<UtilityBudget>;
+
+  // Department budget workflow
+  getDepartmentBudgetRequests(filter?: { year?: number; departmentIds?: number[] }): Promise<DepartmentBudgetRequest[]>;
+  createDepartmentBudgetRequest(req: InsertDepartmentBudgetRequest & { requesterUserId: string }): Promise<DepartmentBudgetRequest>;
+  decideDepartmentBudgetRequest(input: {
+    id: number;
+    status: "Approved" | "Rejected";
+    reviewerUserId: string;
+    decisionNote?: string | null;
+  }): Promise<DepartmentBudgetRequest>;
 
   // Transactions
   getTransactions(userId?: string): Promise<Transaction[]>;
@@ -153,6 +179,123 @@ export class DatabaseStorage implements IStorage {
   async updateProject(id: number, updates: Partial<Project>): Promise<Project> {
     const [p] = await db.update(projects).set(updates).where(eq(projects.id, id)).returning();
     return p;
+  }
+
+  async getUtilities(): Promise<Utility[]> {
+    return db.select().from(utilities).orderBy(desc(utilities.id));
+  }
+
+  async createUtility(insertUtility: InsertUtility): Promise<Utility> {
+    const [u] = await db.insert(utilities).values(insertUtility).returning();
+    return u;
+  }
+
+  async updateUtility(id: number, updates: Partial<Utility>): Promise<Utility> {
+    const [u] = await db
+      .update(utilities)
+      .set({ ...updates, updatedAt: new Date() } as any)
+      .where(eq(utilities.id, id))
+      .returning();
+    return u;
+  }
+
+  async getProjectBudgets(year: number): Promise<ProjectBudget[]> {
+    return db.select().from(projectBudgets).where(eq(projectBudgets.year, year));
+  }
+
+  async upsertProjectBudget(input: { projectId: number; year: number; amount: string }): Promise<ProjectBudget> {
+    const [existing] = await db
+      .select()
+      .from(projectBudgets)
+      .where(and(eq(projectBudgets.projectId, input.projectId), eq(projectBudgets.year, input.year)))
+      .limit(1);
+
+    if (existing) {
+      const [updated] = await db
+        .update(projectBudgets)
+        .set({ amount: input.amount, updatedAt: new Date() } as any)
+        .where(eq(projectBudgets.id, existing.id))
+        .returning();
+      return updated;
+    }
+
+    const [created] = await db
+      .insert(projectBudgets)
+      .values({ projectId: input.projectId, year: input.year, amount: input.amount } as any)
+      .returning();
+    return created;
+  }
+
+  async getUtilityBudgets(year: number): Promise<UtilityBudget[]> {
+    return db.select().from(utilityBudgets).where(eq(utilityBudgets.year, year));
+  }
+
+  async upsertUtilityBudget(input: { utilityId: number; year: number; amount: string }): Promise<UtilityBudget> {
+    const [existing] = await db
+      .select()
+      .from(utilityBudgets)
+      .where(and(eq(utilityBudgets.utilityId, input.utilityId), eq(utilityBudgets.year, input.year)))
+      .limit(1);
+
+    if (existing) {
+      const [updated] = await db
+        .update(utilityBudgets)
+        .set({ amount: input.amount, updatedAt: new Date() } as any)
+        .where(eq(utilityBudgets.id, existing.id))
+        .returning();
+      return updated;
+    }
+
+    const [created] = await db
+      .insert(utilityBudgets)
+      .values({ utilityId: input.utilityId, year: input.year, amount: input.amount } as any)
+      .returning();
+    return created;
+  }
+
+  async getDepartmentBudgetRequests(filter?: { year?: number; departmentIds?: number[] }): Promise<DepartmentBudgetRequest[]> {
+    const whereParts: any[] = [];
+    if (typeof filter?.year === "number") whereParts.push(eq(departmentBudgetRequests.year, filter.year));
+    if (filter?.departmentIds?.length) whereParts.push(sql`${departmentBudgetRequests.departmentId} IN ${filter.departmentIds}`);
+
+    if (whereParts.length === 0) {
+      return db.select().from(departmentBudgetRequests).orderBy(desc(departmentBudgetRequests.createdAt));
+    }
+    return db
+      .select()
+      .from(departmentBudgetRequests)
+      .where(and(...whereParts))
+      .orderBy(desc(departmentBudgetRequests.createdAt));
+  }
+
+  async createDepartmentBudgetRequest(
+    req: InsertDepartmentBudgetRequest & { requesterUserId: string }
+  ): Promise<DepartmentBudgetRequest> {
+    const [created] = await db
+      .insert(departmentBudgetRequests)
+      .values({ ...req, status: "Pending" } as any)
+      .returning();
+    return created;
+  }
+
+  async decideDepartmentBudgetRequest(input: {
+    id: number;
+    status: "Approved" | "Rejected";
+    reviewerUserId: string;
+    decisionNote?: string | null;
+  }): Promise<DepartmentBudgetRequest> {
+    const [updated] = await db
+      .update(departmentBudgetRequests)
+      .set({
+        status: input.status,
+        reviewedByUserId: input.reviewerUserId,
+        reviewedAt: new Date(),
+        decisionNote: input.decisionNote ?? null,
+        updatedAt: new Date(),
+      } as any)
+      .where(eq(departmentBudgetRequests.id, input.id))
+      .returning();
+    return updated;
   }
 
   async getTransactions(userId?: string): Promise<Transaction[]> {

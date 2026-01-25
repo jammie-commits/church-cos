@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-export type AppRole = "admin" | "member";
+export type AppRole = "member" | "admin" | "top_admin" | "finance";
 
 export type SessionPayload = {
   userId: string;
@@ -63,7 +63,10 @@ export function verifySessionToken(token: string): SessionPayload | null {
     return null;
   }
 
-  if (!payload?.userId || (payload.role !== "admin" && payload.role !== "member")) return null;
+  if (!payload?.userId) return null;
+  if (payload.role !== "member" && payload.role !== "admin" && payload.role !== "top_admin" && payload.role !== "finance") {
+    return null;
+  }
   if (typeof payload.exp !== "number") return null;
   if (payload.exp < Math.floor(Date.now() / 1000)) return null;
 

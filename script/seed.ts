@@ -6,7 +6,10 @@ import {
   events,
   notifications,
   projects,
+  projectBudgets,
   transactions,
+  utilities,
+  utilityBudgets,
   userDepartments,
   users,
 } from "../shared/schema";
@@ -54,6 +57,14 @@ const DEPARTMENT_NAMES = [
   "Sound",
 ];
 
+const UTILITY_ITEMS: Array<{ name: string; description: string }> = [
+  { name: "Tissue Papers", description: "Toiletries (restrooms and service areas)" },
+  { name: "Liquid Soap", description: "Hand wash / cleaning supplies" },
+  { name: "Electricity Bills", description: "Power and lighting" },
+  { name: "Sunday School Breakfast", description: "Snacks/tea/breakfast for Sunday school" },
+  { name: "Drinking Water", description: "Bottled/water dispenser refills" },
+];
+
 async function ensureDepartments() {
   const existing = await db.select({ name: departments.name }).from(departments);
   const existingNames = new Set(existing.map((d) => d.name));
@@ -73,6 +84,25 @@ async function ensureDepartments() {
     .where(inArray(departments.name, DEPARTMENT_NAMES));
 }
 
+async function ensureUtilities() {
+  const existing = await db.select({ name: utilities.name }).from(utilities);
+  const existingNames = new Set(existing.map((u) => u.name));
+
+  for (const item of UTILITY_ITEMS) {
+    if (existingNames.has(item.name)) continue;
+    try {
+      await db.insert(utilities).values({ name: item.name, description: item.description, active: true });
+    } catch {
+      // ignore unique races
+    }
+  }
+
+  return db
+    .select({ id: utilities.id, name: utilities.name })
+    .from(utilities)
+    .where(inArray(utilities.name, UTILITY_ITEMS.map((i) => i.name)));
+}
+
 async function upsertAdmin() {
   const email = "jay.mbugua.ph@gmail.com";
   const { salt, hash } = hashPassword("admin");
@@ -89,7 +119,7 @@ async function upsertAdmin() {
       firstName: "James",
       lastName: "Mbugua",
       username: "jay.mbugua.ph",
-      role: "admin",
+      role: "top_admin",
       memberId: "ADMIN-000001",
       passwordSalt: salt,
       passwordHash: hash,
@@ -102,7 +132,7 @@ async function upsertAdmin() {
     .set({
       firstName: "James",
       lastName: "Mbugua",
-      role: "admin",
+      role: "top_admin",
       passwordSalt: salt,
       passwordHash: hash,
       updatedAt: new Date(),
@@ -139,11 +169,12 @@ async function cleanupSeedData() {
 async function seedUsersAndData() {
   const now = new Date();
   const deptRows = await ensureDepartments();
+  const utilityRows = await ensureUtilities();
 
   const { salt: seedSalt, hash: seedHash } = hashPassword("password");
 
   // Create 15 demo members
-  const demoUsers: { id: string; email: string }[] = [];
+  const demoUsers: { id: string; email: string | null }[] = [];
 
   for (let i = 1; i <= 15; i++) {
     const num = String(i).padStart(2, "0");
@@ -216,6 +247,23 @@ async function seedUsersAndData() {
     .returning({ id: projects.id });
 
   const projectIds = projectRows.map((p) => p.id);
+
+  // Seed budgets for current year (projects + utilities)
+  const year = now.getFullYear();
+  for (const pid of projectIds) {
+    try {
+      await db.insert(projectBudgets).values({ projectId: pid, year, amount: "5000" });
+    } catch {
+      // ignore
+    }
+  }
+  for (const u of utilityRows) {
+    try {
+      await db.insert(utilityBudgets).values({ utilityId: u.id, year, amount: "500" });
+    } catch {
+      // ignore
+    }
+  }
 
   // Create events over last 30 days (services + a few events)
   const eventInsert: { title: string; description: string; date: Date; location: string; type: "Service" | "Event" }[] = [];

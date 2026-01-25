@@ -48,6 +48,49 @@ export const projects = pgTable("projects", {
   endDate: timestamp("end_date"),
 });
 
+export const utilities = pgTable("utilities", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  description: text("description"),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const projectBudgets = pgTable("project_budgets", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  year: integer("year").notNull(),
+  amount: numeric("amount").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const utilityBudgets = pgTable("utility_budgets", {
+  id: serial("id").primaryKey(),
+  utilityId: integer("utility_id").notNull(),
+  year: integer("year").notNull(),
+  amount: numeric("amount").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const departmentBudgetRequests = pgTable("department_budget_requests", {
+  id: serial("id").primaryKey(),
+  departmentId: integer("department_id").notNull(),
+  requesterUserId: varchar("requester_user_id").notNull(),
+  year: integer("year").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  amount: numeric("amount").notNull(),
+  status: text("status", { enum: ["Pending", "Approved", "Rejected"] }).default("Pending").notNull(),
+  reviewedByUserId: varchar("reviewed_by_user_id"),
+  reviewedAt: timestamp("reviewed_at"),
+  decisionNote: text("decision_note"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const transactions = pgTable("transactions", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull(), // Changed to match users.id type
@@ -77,10 +120,12 @@ export const usersRelations = relations(users, ({ many }) => ({
   attendance: many(attendance),
   transactions: many(transactions),
   notifications: many(notifications),
+  departmentBudgetRequests: many(departmentBudgetRequests),
 }));
 
 export const departmentsRelations = relations(departments, ({ many }) => ({
   members: many(userDepartments),
+  budgetRequests: many(departmentBudgetRequests),
 }));
 
 export const userDepartmentsRelations = relations(userDepartments, ({ one }) => ({
@@ -99,6 +144,25 @@ export const attendanceRelations = relations(attendance, ({ one }) => ({
 
 export const projectsRelations = relations(projects, ({ many }) => ({
   transactions: many(transactions),
+  budgets: many(projectBudgets),
+}));
+
+export const utilitiesRelations = relations(utilities, ({ many }) => ({
+  budgets: many(utilityBudgets),
+}));
+
+export const projectBudgetsRelations = relations(projectBudgets, ({ one }) => ({
+  project: one(projects, { fields: [projectBudgets.projectId], references: [projects.id] }),
+}));
+
+export const utilityBudgetsRelations = relations(utilityBudgets, ({ one }) => ({
+  utility: one(utilities, { fields: [utilityBudgets.utilityId], references: [utilities.id] }),
+}));
+
+export const departmentBudgetRequestsRelations = relations(departmentBudgetRequests, ({ one }) => ({
+  department: one(departments, { fields: [departmentBudgetRequests.departmentId], references: [departments.id] }),
+  requester: one(users, { fields: [departmentBudgetRequests.requesterUserId], references: [users.id] }),
+  reviewer: one(users, { fields: [departmentBudgetRequests.reviewedByUserId], references: [users.id] }),
 }));
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
@@ -124,6 +188,18 @@ export const insertDepartmentSchema = createInsertSchema(departments).omit({ id:
 export const insertEventSchema = createInsertSchema(events).omit({ id: true });
 export const insertAttendanceSchema = createInsertSchema(attendance).omit({ id: true, checkInTime: true });
 export const insertProjectSchema = createInsertSchema(projects).omit({ id: true, collectedAmount: true });
+export const insertUtilitySchema = createInsertSchema(utilities).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertProjectBudgetSchema = createInsertSchema(projectBudgets).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertUtilityBudgetSchema = createInsertSchema(utilityBudgets).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertDepartmentBudgetRequestSchema = createInsertSchema(departmentBudgetRequests).omit({
+  id: true,
+  status: true,
+  reviewedByUserId: true,
+  reviewedAt: true,
+  decisionNote: true,
+  createdAt: true,
+  updatedAt: true,
+});
 export const insertTransactionSchema = createInsertSchema(transactions).omit({ id: true, date: true, status: true });
 export const insertNotificationSchema = createInsertSchema(notifications).omit({ id: true, read: true, createdAt: true });
 
@@ -136,6 +212,14 @@ export type Event = typeof events.$inferSelect;
 export type InsertEvent = z.infer<typeof insertEventSchema>;
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = z.infer<typeof insertProjectSchema>;
+export type Utility = typeof utilities.$inferSelect;
+export type InsertUtility = z.infer<typeof insertUtilitySchema>;
+export type ProjectBudget = typeof projectBudgets.$inferSelect;
+export type InsertProjectBudget = z.infer<typeof insertProjectBudgetSchema>;
+export type UtilityBudget = typeof utilityBudgets.$inferSelect;
+export type InsertUtilityBudget = z.infer<typeof insertUtilityBudgetSchema>;
+export type DepartmentBudgetRequest = typeof departmentBudgetRequests.$inferSelect;
+export type InsertDepartmentBudgetRequest = z.infer<typeof insertDepartmentBudgetRequestSchema>;
 export type Transaction = typeof transactions.$inferSelect;
 export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
 export type Notification = typeof notifications.$inferSelect;

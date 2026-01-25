@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type SidebarVariant = "member" | "admin";
+import type { AppRole } from "@/components/app-shell";
+
+type SidebarVariant = AppRole;
 
 type DesktopSidebarMode = "fixed" | "hover";
 
@@ -27,6 +29,7 @@ export function Sidebar({
         { href: "/finance", icon: "payments", label: "Finance" },
         { href: "/events", icon: "event", label: "Events" },
         { href: "/projects", icon: "business", label: "Projects" },
+        { href: "/programme", icon: "calendar_month", label: "Programme" },
         { href: "/notifications", icon: "notifications", label: "Notifications" },
         { href: "/profile", icon: "person", label: "Profile" },
     ];
@@ -35,14 +38,34 @@ export function Sidebar({
         { href: "/admin", icon: "dashboard", label: "Overview" },
         { href: "/admin/members", icon: "groups", label: "Members" },
         { href: "/admin/finance", icon: "account_balance", label: "Finance" },
+        { href: "/admin/finance/budget", icon: "request_quote", label: "Budgets" },
         { href: "/admin/events", icon: "event", label: "Events" },
+        { href: "/programme", icon: "calendar_month", label: "Programme" },
         { href: "/admin/settings", icon: "settings", label: "Settings" },
     ];
 
-    const navItems = variant === "admin" ? adminItems : memberItems;
+    const topAdminItems = [
+        { href: "/admin/summary", icon: "space_dashboard", label: "Summary" },
+        ...adminItems,
+    ];
+
+    const financeItems = [
+        { href: "/dashboard", icon: "home", label: "Home" },
+        { href: "/admin/finance/budget", icon: "request_quote", label: "Budgets" },
+        { href: "/finance", icon: "payments", label: "Finance" },
+        { href: "/programme", icon: "calendar_month", label: "Programme" },
+        { href: "/profile", icon: "person", label: "Profile" },
+    ];
+
+    const navItems =
+        variant === "top_admin" ? topAdminItems : variant === "admin" ? adminItems : variant === "finance" ? financeItems : memberItems;
     const mobileItems =
-        variant === "admin"
+        variant === "top_admin"
+            ? topAdminItems
+            : variant === "admin"
             ? adminItems
+            : variant === "finance"
+            ? financeItems
             : [
                   { href: "/dashboard", icon: "home", label: "Home" },
                   { href: "/finance", icon: "payments", label: "Finance" },
@@ -70,13 +93,15 @@ export function Sidebar({
                 <div className="flex flex-col w-full">
                     {/* Logo/Brand */}
                     <div className="flex items-center justify-between p-6 border-b border-slate-200/60 dark:border-white/10">
-                        <Link href={variant === "admin" ? "/admin" : "/dashboard"} className="flex items-center gap-3">
+                        <Link href={variant === "member" ? "/dashboard" : variant === "finance" ? "/admin/finance/budget" : "/admin"} className="flex items-center gap-3">
                             <div className="size-10 bg-brand-purple rounded-xl flex items-center justify-center ring-2 ring-brand-lime/25">
                                 <span className="material-symbols-outlined text-white">church</span>
                             </div>
                             <div>
                                 <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">JTW CMS</h1>
-                                <p className="text-xs text-slate-600 dark:text-gray-400">{variant === "admin" ? "Admin Console" : "Members Portal"}</p>
+                                <p className="text-xs text-slate-600 dark:text-gray-400">
+                                    {variant === "top_admin" ? "Top Admin" : variant === "admin" ? "Admin Console" : variant === "finance" ? "Finance" : "Members Portal"}
+                                </p>
                             </div>
                         </Link>
                     </div>
@@ -84,7 +109,7 @@ export function Sidebar({
                     {/* Navigation */}
                     <nav className="flex-1 overflow-y-auto p-4">
                         <p className="px-3 mb-2 text-xs font-semibold text-slate-500 dark:text-gray-500 uppercase tracking-wider">
-                            {variant === "admin" ? "Administration" : "Navigation"}
+                            {variant === "member" ? "Navigation" : "Administration"}
                         </p>
                         <div className="space-y-1">
                             {navItems.map((item) => {

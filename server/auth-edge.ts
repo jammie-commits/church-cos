@@ -1,4 +1,4 @@
-export type AppRole = "admin" | "member";
+export type AppRole = "member" | "admin" | "top_admin" | "finance";
 
 export type SessionPayload = {
   userId: string;
@@ -52,7 +52,7 @@ export async function verifySessionTokenEdge(token: string): Promise<SessionPayl
   }
 
   if (!payload?.userId) return null;
-  if (payload.role !== "admin" && payload.role !== "member") return null;
+  if (payload.role !== "member" && payload.role !== "admin" && payload.role !== "top_admin" && payload.role !== "finance") return null;
   if (typeof payload.exp !== "number") return null;
   if (payload.exp < Math.floor(Date.now() / 1000)) return null;
 

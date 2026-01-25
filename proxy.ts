@@ -68,9 +68,30 @@ export async function proxy(req: NextRequest) {
         return NextResponse.redirect(url);
     }
 
-    // 4) Admin gate
+    // 4) Admin gates (RBAC)
+    // - Summary dashboard is Top Admin only
+    if (pathname.startsWith("/admin/summary")) {
+        if (role !== "top_admin") {
+            const url = req.nextUrl.clone();
+            url.pathname = DEFAULT_APP_PATH;
+            return NextResponse.redirect(url);
+        }
+        return NextResponse.next();
+    }
+
+    // - Finance Budget page can be accessed by Admin / Top Admin / Finance
+    if (pathname.startsWith("/admin/finance/budget")) {
+        if (role !== "admin" && role !== "top_admin" && role !== "finance") {
+            const url = req.nextUrl.clone();
+            url.pathname = DEFAULT_APP_PATH;
+            return NextResponse.redirect(url);
+        }
+        return NextResponse.next();
+    }
+
+    // - All other /admin routes require Admin or Top Admin
     if (pathname.startsWith("/admin")) {
-        if (role !== "admin") {
+        if (role !== "admin" && role !== "top_admin") {
             const url = req.nextUrl.clone();
             url.pathname = DEFAULT_APP_PATH;
             return NextResponse.redirect(url);

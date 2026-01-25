@@ -23,7 +23,7 @@ export const users = pgTable("users", {
   
   // Custom CMS fields
   username: text("username").unique(), // Optional for Replit Auth users
-  role: text("role", { enum: ["admin", "member"] }).default("member").notNull(),
+  role: text("role", { enum: ["top_admin", "admin", "finance", "member"] }).default("member").notNull(),
   
   // A. Personal Information
   gender: text("gender", { enum: ["Male", "Female"] }),
