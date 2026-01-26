@@ -1,0 +1,44 @@
+name: Deploy to server (main)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    name: Deploy to server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          env: |
+            APP_DIR=/root/projects/JTW-MAIN/church-cos
+            PM2_NAME=jtwm-cos
+          script: |
+            set -e
+            if [ -z "$APP_DIR" ]; then echo "Error: APP_DIR env not set"; exit 1; fi
+            cd "$APP_DIR"
+            git fetch --all
+            git reset --hard origin/main
+            git clean -fd
+            export NODE_ENV=production
+            npm ci
+            npm run build
+            if pm2 describe "$PM2_NAME" >/dev/null 2>&1; then
+              pm2 restart "$PM2_NAME"
+            else
+              pm2 start npm --name "$PM2_NAME" -- start
+            fi
