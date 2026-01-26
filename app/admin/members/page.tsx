@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { storage } from "@/server/storage";
 import { AppShell } from "@/components/app-shell";
 import { TopBar } from "@/components/top-bar";
@@ -60,7 +61,12 @@ export default async function MemberDirectory() {
                                     <div className="absolute bottom-0 right-0 h-4 w-4 bg-green-500 border-2 border-white dark:border-background-dark rounded-full"></div>
                                 </div>
                                 <div className="flex flex-col flex-1 min-w-0">
-                                    <p className="text-base font-semibold leading-tight truncate">{member.firstName} {member.lastName}</p>
+                                    <Link
+                                        href={`/admin/members/${member.id}`}
+                                        className="text-base font-semibold leading-tight truncate hover:underline underline-offset-4"
+                                    >
+                                        {member.firstName} {member.lastName}
+                                    </Link>
                                     <div className="flex items-center gap-2 mt-1">
                                         <span className="text-xs font-mono text-slate-500 dark:text-slate-400">#{member.memberId}</span>
                                         <span className="h-1 w-1 rounded-full bg-slate-400"></span>

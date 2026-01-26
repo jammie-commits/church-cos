@@ -71,6 +71,7 @@ export function Sidebar({
                   { href: "/finance", icon: "payments", label: "Finance" },
                   { href: "/events", icon: "event", label: "Events" },
                   { href: "/projects", icon: "business", label: "Projects" },
+                  { href: "/programme", icon: "calendar_month", label: "Programme" },
                   { href: "/notifications", icon: "notifications", label: "Alerts" },
               ];
     const activeTextClass = "text-brand-lime";
@@ -86,7 +87,7 @@ export function Sidebar({
         <>
             {/* Desktop Sidebar */}
             <aside
-                className={`hidden md:flex fixed left-0 top-0 h-screen w-64 border-r border-slate-200/60 dark:border-white/10 bg-brand-purple/5 dark:bg-black z-50 ${desktopAsideClass}`}
+                className={`hidden md:flex fixed left-0 top-0 h-screen w-64 border-r border-slate-200/60 dark:border-white/10 bg-white/80 dark:bg-black/60 backdrop-blur-xl shadow-lg z-50 ${desktopAsideClass}`}
                 onMouseEnter={() => onDesktopOpenChange?.(true)}
                 onMouseLeave={() => onDesktopOpenChange?.(false)}
             >
@@ -151,7 +152,7 @@ export function Sidebar({
             </aside>
 
             {/* Mobile Bottom Nav */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200/60 dark:border-white/10 bg-brand-purple/5 dark:bg-black">
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200/60 dark:border-white/10 bg-white/85 dark:bg-black/70 backdrop-blur-xl shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.35)]">
                 <div className="flex items-center h-16 px-2 pb-[env(safe-area-inset-bottom)]" aria-label="Bottom navigation">
                     {mobileItems.map((item) => {
                         const isActive = pathname === item.href || pathname.startsWith(item.href + "/");

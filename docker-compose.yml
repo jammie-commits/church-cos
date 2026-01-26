@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: church-manager-postgres
+    environment:
+      POSTGRES_DB: church_manager
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "54322:5432"
+    volumes:
+      - church_manager_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d church_manager"]
+      interval: 2s
+      timeout: 3s
+      retries: 25
+
+volumes:
+  church_manager_pgdata:

@@ -2,6 +2,7 @@ import { db } from "./db";
 import {
   users, departments, events, projects, transactions, notifications, attendance, userDepartments,
   utilities, projectBudgets, utilityBudgets, departmentBudgetRequests,
+  eventRegistrations,
   type User, type InsertUser, type UpdateUserRequest,
   type Department, type InsertDepartment,
   type Event, type InsertEvent,
@@ -12,7 +13,8 @@ import {
   type DepartmentBudgetRequest, type InsertDepartmentBudgetRequest,
   type Transaction, type InsertTransaction,
   type Notification,
-  type InsertAttendance
+  type InsertAttendance,
+  type EventRegistration
 } from "@shared/schema";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { createUniqueMemberId } from "@/server/member-id";
@@ -77,6 +79,39 @@ export interface IStorage {
   // Attendance
   markAttendance(att: InsertAttendance): Promise<void>;
   getEventAttendance(eventId: number): Promise<any[]>;
+  getUserAttendance(userId: string): Promise<
+    Array<{
+      attendanceId: number;
+      eventId: number;
+      status: "Present" | "Absent" | "Excused" | null;
+      checkInTime: Date | null;
+      eventTitle: string;
+      eventType: "Service" | "Event";
+      eventDate: Date;
+      eventLocation: string | null;
+    }>
+  >;
+
+  // Event registrations
+  getEventRegistration(eventId: number, userId: string): Promise<EventRegistration | undefined>;
+  setEventRegistrationStatus(input: {
+    eventId: number;
+    userId: string;
+    status: "Registered" | "Cancelled";
+  }): Promise<EventRegistration>;
+  getUserRegistrations(userId: string): Promise<
+    Array<{
+      registrationId: number;
+      eventId: number;
+      status: "Registered" | "Cancelled";
+      createdAt: Date | null;
+      updatedAt: Date | null;
+      eventTitle: string;
+      eventType: "Service" | "Event";
+      eventDate: Date;
+      eventLocation: string | null;
+    }>
+  >;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -334,6 +369,102 @@ export class DatabaseStorage implements IStorage {
 
   async getEventAttendance(eventId: number): Promise<any[]> {
     return db.select().from(attendance).where(eq(attendance.eventId, eventId));
+  }
+
+  async getUserAttendance(userId: string): Promise<
+    Array<{
+      attendanceId: number;
+      eventId: number;
+      status: "Present" | "Absent" | "Excused" | null;
+      checkInTime: Date | null;
+      eventTitle: string;
+      eventType: "Service" | "Event";
+      eventDate: Date;
+      eventLocation: string | null;
+    }>
+  > {
+    const rows = await db
+      .select({
+        attendanceId: attendance.id,
+        eventId: attendance.eventId,
+        status: attendance.status,
+        checkInTime: attendance.checkInTime,
+        eventTitle: events.title,
+        eventType: events.type,
+        eventDate: events.date,
+        eventLocation: events.location,
+      })
+      .from(attendance)
+      .innerJoin(events, eq(attendance.eventId, events.id))
+      .where(eq(attendance.userId, userId))
+      .orderBy(desc(events.date));
+
+    return rows as any;
+  }
+
+  async getEventRegistration(eventId: number, userId: string): Promise<EventRegistration | undefined> {
+    const [row] = await db
+      .select()
+      .from(eventRegistrations)
+      .where(and(eq(eventRegistrations.eventId, eventId), eq(eventRegistrations.userId, userId)))
+      .orderBy(desc(eventRegistrations.updatedAt))
+      .limit(1);
+    return row;
+  }
+
+  async setEventRegistrationStatus(input: {
+    eventId: number;
+    userId: string;
+    status: "Registered" | "Cancelled";
+  }): Promise<EventRegistration> {
+    const existing = await this.getEventRegistration(input.eventId, input.userId);
+    if (existing) {
+      const [updated] = await db
+        .update(eventRegistrations)
+        .set({ status: input.status, updatedAt: new Date() } as any)
+        .where(eq(eventRegistrations.id, existing.id))
+        .returning();
+      return updated;
+    }
+
+    const [created] = await db
+      .insert(eventRegistrations)
+      .values({ eventId: input.eventId, userId: input.userId, status: input.status } as any)
+      .returning();
+    return created;
+  }
+
+  async getUserRegistrations(userId: string): Promise<
+    Array<{
+      registrationId: number;
+      eventId: number;
+      status: "Registered" | "Cancelled";
+      createdAt: Date | null;
+      updatedAt: Date | null;
+      eventTitle: string;
+      eventType: "Service" | "Event";
+      eventDate: Date;
+      eventLocation: string | null;
+    }>
+  > {
+    const rows = await db
+      .select({
+        registrationId: eventRegistrations.id,
+        eventId: eventRegistrations.eventId,
+        status: eventRegistrations.status,
+        createdAt: eventRegistrations.createdAt,
+        updatedAt: eventRegistrations.updatedAt,
+        eventTitle: events.title,
+        eventType: events.type,
+        eventDate: events.date,
+        eventLocation: events.location,
+      })
+      .from(eventRegistrations)
+      .innerJoin(events, eq(eventRegistrations.eventId, events.id))
+      .where(eq(eventRegistrations.userId, userId))
+      .orderBy(desc(events.date));
+
+    return rows as any;
   }
 }
 

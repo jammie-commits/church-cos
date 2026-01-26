@@ -37,6 +37,15 @@ export const attendance = pgTable("attendance", {
   checkInTime: timestamp("check_in_time").defaultNow(),
 });
 
+export const eventRegistrations = pgTable("event_registrations", {
+  id: serial("id").primaryKey(),
+  eventId: integer("event_id").notNull(),
+  userId: varchar("user_id").notNull(), // Changed to match users.id type
+  status: text("status", { enum: ["Registered", "Cancelled"] }).default("Registered").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -118,6 +127,7 @@ export const notifications = pgTable("notifications", {
 export const usersRelations = relations(users, ({ many }) => ({
   departments: many(userDepartments),
   attendance: many(attendance),
+  registrations: many(eventRegistrations),
   transactions: many(transactions),
   notifications: many(notifications),
   departmentBudgetRequests: many(departmentBudgetRequests),
@@ -135,11 +145,17 @@ export const userDepartmentsRelations = relations(userDepartments, ({ one }) => 
 
 export const eventsRelations = relations(events, ({ many }) => ({
   attendance: many(attendance),
+  registrations: many(eventRegistrations),
 }));
 
 export const attendanceRelations = relations(attendance, ({ one }) => ({
   event: one(events, { fields: [attendance.eventId], references: [events.id] }),
   user: one(users, { fields: [attendance.userId], references: [users.id] }),
+}));
+
+export const eventRegistrationsRelations = relations(eventRegistrations, ({ one }) => ({
+  event: one(events, { fields: [eventRegistrations.eventId], references: [events.id] }),
+  user: one(users, { fields: [eventRegistrations.userId], references: [users.id] }),
 }));
 
 export const projectsRelations = relations(projects, ({ many }) => ({
@@ -187,6 +203,7 @@ export const insertUserSchema = createInsertSchema(users).omit({
 export const insertDepartmentSchema = createInsertSchema(departments).omit({ id: true });
 export const insertEventSchema = createInsertSchema(events).omit({ id: true });
 export const insertAttendanceSchema = createInsertSchema(attendance).omit({ id: true, checkInTime: true });
+export const insertEventRegistrationSchema = createInsertSchema(eventRegistrations).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertProjectSchema = createInsertSchema(projects).omit({ id: true, collectedAmount: true });
 export const insertUtilitySchema = createInsertSchema(utilities).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertProjectBudgetSchema = createInsertSchema(projectBudgets).omit({ id: true, createdAt: true, updatedAt: true });
@@ -224,6 +241,8 @@ export type Transaction = typeof transactions.$inferSelect;
 export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
 export type Notification = typeof notifications.$inferSelect;
 export type InsertAttendance = z.infer<typeof insertAttendanceSchema>;
+export type EventRegistration = typeof eventRegistrations.$inferSelect;
+export type InsertEventRegistration = z.infer<typeof insertEventRegistrationSchema>;
 
 // Request/Response Types
 export type CreateUserRequest = InsertUser;

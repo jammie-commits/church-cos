@@ -12,6 +12,10 @@ vite.config.ts.*
 # Local env/secrets
 .env
 
+# Env backups (created by helper scripts)
+.env.bak.*
+.env.supabase.bak.*
+
 .local
 
 # Logs

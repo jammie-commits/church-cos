@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { TopBar } from "@/components/top-bar";
 import { storage } from "@/server/storage";
+import { RegisterButtonClient } from "./register-button-client";
 
 export default async function EventDetails({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -83,15 +84,7 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
                                     </div>
 
                                     <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                                        <button
-                                            type="button"
-                                            aria-label="Register"
-                                            title="Register"
-                                            className="flex-1 rounded-xl bg-white text-black hover:bg-gray-100 px-4 py-3 text-sm font-extrabold transition-colors flex items-center justify-center gap-2"
-                                        >
-                                            <span className="material-symbols-outlined text-[18px]">how_to_reg</span>
-                                            Register
-                                        </button>
+                                        <RegisterButtonClient eventId={eventId} />
                                         <Link
                                             href="/events"
                                             className="flex-1 rounded-xl border border-slate-200/60 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 px-4 py-3 text-sm font-extrabold text-slate-900 dark:text-white transition-colors flex items-center justify-center gap-2"

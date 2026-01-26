@@ -3,7 +3,9 @@ import "dotenv/config";
 import { db, pool } from "../server/db";
 import {
   departments,
+  attendance,
   events,
+  eventRegistrations,
   notifications,
   projects,
   projectBudgets,
@@ -156,6 +158,22 @@ async function cleanupSeedData() {
     await db.delete(userDepartments).where(inArray(userDepartments.userId, seedUserIds));
   }
 
+  // Attendance (seeded users + seeded events)
+  if (seedUserIds.length > 0) {
+    await db.delete(attendance).where(inArray(attendance.userId, seedUserIds));
+  }
+  await db.delete(attendance).where(
+    sql`${attendance.eventId} IN (select ${events.id} from ${events} where ${events.title} like ${"%" + SEED_TAG + "%"})`
+  );
+
+  // Event registrations (seeded users + seeded events)
+  if (seedUserIds.length > 0) {
+    await db.delete(eventRegistrations).where(inArray(eventRegistrations.userId, seedUserIds));
+  }
+  await db.delete(eventRegistrations).where(
+    sql`${eventRegistrations.eventId} IN (select ${events.id} from ${events} where ${events.title} like ${"%" + SEED_TAG + "%"})`
+  );
+
   // Clean up seeded projects/events
   await db.delete(projects).where(sql`${projects.name} like ${"%" + SEED_TAG + "%"}`);
   await db.delete(events).where(sql`${events.title} like ${"%" + SEED_TAG + "%"}`);
@@ -294,7 +312,83 @@ async function seedUsersAndData() {
   }
 
   if (eventInsert.length > 0) {
-    await db.insert(events).values(eventInsert);
+    const insertedEvents = await db
+      .insert(events)
+      .values(eventInsert)
+      .returning({ id: events.id, title: events.title, date: events.date, type: events.type, location: events.location });
+
+    // Seed registrations + attendance for demo users
+    const statuses = ["Present", "Present", "Present", "Present", "Absent", "Excused"] as const;
+    const attendanceRows: Array<{ eventId: number; userId: string; status: (typeof statuses)[number] }> = [];
+    const registrationRows: Array<{ eventId: number; userId: string; status: "Registered" | "Cancelled" }> = [];
+
+    for (const e of insertedEvents) {
+      // Pick ~12 registrations per event
+      for (let i = 0; i < 12; i++) {
+        const user = pick(demoUsers, e.id + i);
+        const status: "Registered" | "Cancelled" = i === 11 && e.id % 5 === 0 ? "Cancelled" : "Registered";
+        registrationRows.push({ eventId: e.id, userId: user.id, status });
+      }
+
+      // Pick ~10 users per event
+      for (let i = 0; i < 10; i++) {
+        const user = pick(demoUsers, e.id + i);
+        const status = pick([...statuses], e.id + i * 7);
+        attendanceRows.push({ eventId: e.id, userId: user.id, status });
+      }
+    }
+
+    if (registrationRows.length > 0) {
+      await db.insert(eventRegistrations).values(registrationRows as any);
+    }
+
+    if (attendanceRows.length > 0) {
+      await db.insert(attendance).values(attendanceRows as any);
+    }
+  }
+
+  // Create a few future events (so "registered (upcoming)" is visible)
+  const futureEvents: { title: string; description: string; date: Date; location: string; type: "Service" | "Event" }[] = [];
+  for (let d = 1; d <= 14; d++) {
+    const day = daysAgo(now, -d);
+    const weekday = day.getDay();
+    if (weekday === 0) {
+      futureEvents.push({
+        title: `Sunday Service (Upcoming) ${SEED_TAG}`,
+        description: "Weekly service.",
+        date: atTime(day, 10, 0),
+        location: "Main Sanctuary",
+        type: "Service",
+      });
+    }
+    if (weekday === 5 && futureEvents.length < 6) {
+      futureEvents.push({
+        title: `Youth Hangout (Upcoming) ${SEED_TAG}`,
+        description: "Community hangout and fellowship.",
+        date: atTime(day, 17, 0),
+        location: "Fellowship Hall",
+        type: "Event",
+      });
+    }
+    if (futureEvents.length >= 6) break;
+  }
+
+  if (futureEvents.length > 0) {
+    const insertedFutureEvents = await db
+      .insert(events)
+      .values(futureEvents)
+      .returning({ id: events.id });
+
+    const futureRegistrationRows: Array<{ eventId: number; userId: string; status: "Registered" | "Cancelled" }> = [];
+    for (const e of insertedFutureEvents) {
+      for (let i = 0; i < 6; i++) {
+        const user = pick(demoUsers, e.id + i);
+        futureRegistrationRows.push({ eventId: e.id, userId: user.id, status: "Registered" });
+      }
+    }
+    if (futureRegistrationRows.length > 0) {
+      await db.insert(eventRegistrations).values(futureRegistrationRows as any);
+    }
   }
 
   // Create transactions & notifications across last 30 days

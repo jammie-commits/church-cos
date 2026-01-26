@@ -30,8 +30,19 @@ export function LoginClient() {
                 return;
             }
 
-            const next = searchParams.get("next") || "/dashboard";
-            router.push(next);
+            const nextParam = searchParams.get("next");
+            if (nextParam) {
+                router.push(nextParam);
+                return;
+            }
+
+            const role = String(data?.user?.role ?? "");
+            if (role === "top_admin") {
+                router.push("/admin/summary");
+                return;
+            }
+
+            router.push("/dashboard");
         } finally {
             setLoading(false);
         }

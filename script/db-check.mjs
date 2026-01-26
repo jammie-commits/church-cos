@@ -12,16 +12,40 @@ if (!url) {
 }
 
 const raw = process.env.DB_SSL_REJECT_UNAUTHORIZED ?? process.env.PGSSL_REJECT_UNAUTHORIZED;
-const rejectUnauthorized =
-  raw == null ? true : !["0", "false", "no"].includes(String(raw).toLowerCase());
+const rejectUnauthorizedOverride =
+  raw == null ? undefined : !["0", "false", "no"].includes(String(raw).toLowerCase());
+
+function shouldUseSsl(urlString) {
+  let parsed;
+  try {
+    parsed = new URL(urlString);
+  } catch {
+    // If explicitly requested, force SSL.
+    return rejectUnauthorizedOverride != null;
+  }
+
+  const sslmode = parsed.searchParams.get("sslmode");
+  const hostname = parsed.hostname;
+
+  // Match server/db.ts behavior.
+  return (
+    rejectUnauthorizedOverride === false ||
+    sslmode === "require" ||
+    sslmode === "verify-ca" ||
+    sslmode === "verify-full" ||
+    sslmode === "no-verify" ||
+    hostname.endsWith("supabase.com") ||
+    hostname.includes("pooler.supabase.com")
+  );
+}
 
 console.log("SSL_REJECT_UNAUTHORIZED_RAW", raw ?? "(unset)");
-console.log("SSL_REJECT_UNAUTHORIZED", rejectUnauthorized);
+console.log("SSL_REJECT_UNAUTHORIZED_OVERRIDE", rejectUnauthorizedOverride ?? "(unset)");
 
 let sanitizedUrl = url;
 try {
   const parsed = new URL(url);
-  if (!rejectUnauthorized && parsed.searchParams.has("sslmode")) {
+  if (rejectUnauthorizedOverride === false && parsed.searchParams.has("sslmode")) {
     parsed.searchParams.delete("sslmode");
     sanitizedUrl = parsed.toString();
   }
@@ -29,9 +53,12 @@ try {
   // ignore
 }
 
-const ssl = rejectUnauthorized
-  ? { rejectUnauthorized }
-  : { rejectUnauthorized, checkServerIdentity: () => undefined };
+const wantsSsl = shouldUseSsl(url);
+const ssl = wantsSsl
+  ? rejectUnauthorizedOverride === false
+    ? { rejectUnauthorized: false, checkServerIdentity: () => undefined }
+    : { rejectUnauthorized: rejectUnauthorizedOverride ?? true }
+  : undefined;
 
 const pool = new pg.Pool({
   connectionString: sanitizedUrl,
